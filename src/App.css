@@ -1,0 +1,132 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+i.icon.hidden {
+  display: none;
+}
+
+#playButton {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform: scale(5, 5);
+}
+
+.fullscreen {
+  height: 100%;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logobacking {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  background-color: rgb(250, 250, 250);
+  border-radius: 50% 50%;
+  width: 160px;
+  height: 160px;
+}
+
+.play {
+  order: 0;
+  flex: 1 1 auto;
+  align-self: auto;
+  margin: 5px;
+  width: 64px;
+  height: 64px;
+  fill: black;
+}
+
+.stopped {
+  order: 0;
+  flex: 1 1 auto;
+  align-self: auto;
+  margin: 5px;
+  width: 44px;
+  height: 44px;
+  fill: #9e9e9e;
+}
+
+.logo {
+  order: 0;
+  flex: 1 1 auto;
+  align-self: auto;
+  margin: 5px;
+  width: 128px;
+  height: 128px;
+}
+.logo path {
+  stroke-dasharray: 315;
+  stroke-dashoffset: 315;
+  animation: dash 1.5s alternate infinite;
+  stroke: #9e9e9e;
+  stroke: width 1.2px;
+  fill: white;
+}
+
+.logo g {
+  animation: fill-in 1.5s 1.5s alternate infinite;
+  fill-opacity: 1;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fill-in {
+  to {
+    fill-opacity: 1;
+  }
+}
+
+.hidden {
+  display: none !important;
+}

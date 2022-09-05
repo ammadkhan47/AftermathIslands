@@ -1,0 +1,10 @@
+{
+  "title": "client-template",
+  "description": "pureweb client template",
+  "launchType": "local",
+  "projectId": "",
+  "target": "localhost",
+  "usePointerLock": true,
+  "pointerLockRelease": true,
+  "resolution":"fhd"
+}
