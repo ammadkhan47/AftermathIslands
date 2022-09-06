@@ -213,7 +213,7 @@ audio.volume = 0.5;
 const query = qs.parse(window.location.search);
 const clientOptions: ClientOptions = new ClientOptions();
 clientOptions.LaunchType = (query['launchType'] as string) ?? client.launchType;
-if (query['collaboration'] && query['collaboration'] == 'true') {
+if (query['collaboration'] && query['collaboration'] === 'true') {
   clientOptions.LaunchType = 'local';
 }
 
