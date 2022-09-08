@@ -127,9 +127,8 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
           <g fillRule="nonzero">
                     <img
                         alt="Aftermathislands Loading"
-                        src="/AftermathIslandsloading.gif"
-                        style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }}
-                    />
+                        src="/AftermathIslandsloadlogo.png"
+                          />
                 </g>
         </svg>
         <h3>Please wait, your session is loading.</h3>
