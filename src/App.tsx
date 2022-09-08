@@ -44,7 +44,6 @@ import clientConfig from './client.json';
 
 import { LaunchView } from './Launch';
 import logger from './Log';
-import loadingGif from './Aftermath-Islands-loading.gif'
 
 
 const client: ClientJson = clientConfig as ClientJson;
@@ -126,7 +125,11 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
       <div>
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
           <g fillRule="nonzero">
-                    <img src={loadingGif} alt="wait until the page loads" />
+                    <img
+                        alt="Aftermathislands Loading"
+                        src="/AftermathIslandsloading.gif"
+                        style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }}
+                    />
                 </g>
         </svg>
         <h3>Please wait, your session is loading.</h3>
@@ -193,7 +196,7 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
 
         {props.StreamerStatus !== StreamerStatus.Connected && (
           <img
-            alt="PureWeb Logo"
+                      alt="Aftermathislands Logo"
                       src="/aftermathislands.svg"
             style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }}
           />
