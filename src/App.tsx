@@ -194,7 +194,7 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
         {props.StreamerStatus !== StreamerStatus.Connected && (
           <img
             alt="PureWeb Logo"
-            src="/pureweb.svg"
+                      src="/aftermathislands.svg"
             style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }}
           />
         )}
