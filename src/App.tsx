@@ -41,10 +41,9 @@ import { Button, Icon } from 'semantic-ui-react';
 import useAsyncEffect from 'use-async-effect';
 import './App.css';
 import clientConfig from './client.json';
-
 import { LaunchView } from './Launch';
 import logger from './Log';
-
+import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 const client: ClientJson = clientConfig as ClientJson;
 
@@ -125,10 +124,12 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
       <div>
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
           <g fillRule="nonzero">
-                    <img
-                        alt="Aftermathislands Loading"
-                        src="/AftermathIslandsloadlogo.png"
-                          />
+                    <video
+                    autoPlay
+                    loop
+                    >
+                      <source src={AftermathIslandsVideo} type='video/mp4' />
+                    </video>
                 </g>
         </svg>
         <h3>Please wait, your session is loading.</h3>
