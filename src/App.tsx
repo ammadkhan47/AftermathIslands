@@ -119,10 +119,10 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
         <h3>Please refresh to request a new session.</h3>
       </div>
     );
-  } else {
+  } else { 
     content = (
       <div style={{height:'100vh',width:"100vw"}}>
-        <video autoPlay loop>
+        <video className='videoOfBackground' autoPlay loop>
           <track kind="captions" {...props} />
           <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
         </video>
