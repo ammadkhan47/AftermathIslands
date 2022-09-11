@@ -43,7 +43,7 @@ import './App.css';
 import clientConfig from './client.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
-import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
+//import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 const client: ClientJson = clientConfig as ClientJson;
 
@@ -121,22 +121,13 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     );
   } else {
     content = (
-      <div>
+      <div style={{height:'100vh',width:"100vw"}}>
+        <video autoPlay loop>
+          <track kind="captions" {...props} />
+          <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
+        </video>
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
-          
-                    <video  autoPlay  loop
-                    style={{
-                      position:"absolute",
-                      width:"100%",
-                      left: "50%",
-                      top:"100%",
-                      transform:"translate(-50%,-50%)"
-                      }}
-                    >
-                      <track kind="captions" {...props} />
-                      <source src={AftermathIslandsVideo} type='video/mp4' />
-                    </video>
-                
+
         </svg>
         <h3>Please wait, your session is loading.</h3>
       </div>
@@ -202,8 +193,8 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
 
         {props.StreamerStatus !== StreamerStatus.Connected && (
           <img
-                      alt="Aftermathislands Logo"
-                      src="/aftermathislands.svg"
+            alt="Aftermathislands Logo"
+            src="/aftermathislands.svg"
             style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }}
           />
         )}
@@ -330,7 +321,7 @@ const App: React.FC = () => {
       try {
         await queueLaunchRequest();
       } catch (err) {
-        setLaunchRequestError(err);
+        setLaunchRequestError(err as any);
       }
     }
   };
