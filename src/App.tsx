@@ -127,7 +127,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
                     <video
                     autoPlay
                     loop
-                    >
+                    ><track kind="captions" {...props} />
                       <source src={AftermathIslandsVideo} type='video/mp4' />
                     </video>
                 </g>
