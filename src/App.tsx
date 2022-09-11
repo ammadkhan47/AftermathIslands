@@ -123,14 +123,20 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     content = (
       <div>
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
-          <g fillRule="nonzero">
-                    <video
-                    autoPlay
-                    loop
-                    ><track kind="captions" {...props} />
+          
+                    <video  autoPlay  loop
+                    style={{
+                      position:"absolute",
+                      width:"100%",
+                      left: "50%",
+                      top:"100%",
+                      transform:"translate(-50%,-50%)"
+                      }}
+                    >
+                      <track kind="captions" {...props} />
                       <source src={AftermathIslandsVideo} type='video/mp4' />
                     </video>
-                </g>
+                
         </svg>
         <h3>Please wait, your session is loading.</h3>
       </div>
