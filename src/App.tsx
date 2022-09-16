@@ -122,7 +122,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   } else { 
     content = (
       <div style={{height:'100vh',width:"100vw"}}>
-        <video className='videoOfBackground' autoPlay loop>
+        <video className='videoOfBackground' autoPlay playsInline loop>
           <track kind="captions" {...props} />
           <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
         </video>
