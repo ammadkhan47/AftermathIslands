@@ -3,7 +3,7 @@
   "modelId":"9d2054f8-9eec-4781-b56e-d634e17f0532",
   "version":"h1hxyy",
   "useNativeTouchEvents":true,
-  "usePointerLock":false,
+  "usePointerLock":true,
   "pointerLockRelease":false
   
 }
