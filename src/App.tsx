@@ -424,7 +424,7 @@ const App: React.FC = () => {
     }
   };
 
-  const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
+  //const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
