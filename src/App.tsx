@@ -163,19 +163,32 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   );
   //RPM
         function abc(){
-
+          let content;
           const el=document.getElementById('rpmiframe') as HTMLIFrameElement;
           el.style.display = 'none';
+          content = (
+            <div style={{height:'100vh',width:"100vw"}}>
+              <video className='videoOfBackground' autoPlay playsInline loop>
+                <track kind="captions" {...props} />
+                <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
+              </video>
+              <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
+      
+              </svg>
+              <h3>Please wait, your session is loading.</h3>
+            </div>
+          );
           //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
           //ab.style.display="block"
           //ab.play();
+
 
   if (props.StreamerStatus === StreamerStatus.Connected || props.StreamerStatus === StreamerStatus.Completed) {
     logger.info("immmmm connnectedddddd");
     return <div />;
   }
 
-  let content;
+  
 
   if (props.StreamerStatus === StreamerStatus.NotSupported) {
     content = (
