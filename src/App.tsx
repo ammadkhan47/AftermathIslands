@@ -169,7 +169,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
 
     </svg>
-    <h3>Please wait, your session is loading.</h3>
+    
   </div>
   </div>
   );
@@ -217,7 +217,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     );
   } else { 
     content = (
-      <div style={{height:'100vh',width:"100vw",display:'none'}}>
+      <div style={{height:'100vh',width:"100vw"}}>
         
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
 
