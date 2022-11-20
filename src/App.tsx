@@ -43,6 +43,7 @@ import './App.css';
 import clientConfig from './client.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
+import { isMobile, browserName } from "react-device-detect";
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 const client: ClientJson = clientConfig as ClientJson;
@@ -414,9 +415,15 @@ const App: React.FC = () => {
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
     emitter.EmitUIInteraction(avatarUrl);
-    const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     logger.info( avatarUrl);
-    logger.info( "Is it mobile? "+isMobile);
+    logger.info( isMobile);
+    if (isMobile) {
+      logger.info( "its a mobile ");
+    }
+    else{
+      logger.info( "its a desktop ");
+    }
+    
     
 
   }, [avatarUrl, emitter,status, streamerStatus]);
