@@ -176,8 +176,8 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
           const el=document.getElementById('rpmiframe') as HTMLIFrameElement;
           el.style.display = 'none';
           const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
-          ab.style.display="block"
-          ab.play();
+          //ab.style.display="block"
+          //ab.play();
 
   if (props.StreamerStatus === StreamerStatus.Connected || props.StreamerStatus === StreamerStatus.Completed) {
     logger.info("immmmm connnectedddddd");
