@@ -414,10 +414,9 @@ const App: React.FC = () => {
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
-    emitter.EmitUIInteraction(avatarUrl);
-    logger.info( avatarUrl);
-    logger.info( isMobile);
+    
     if (isMobile) {
+      emitter.EmitUIInteraction("mobile");
       logger.info( "its a mobile ");
       logger.info( browserName);
     }
@@ -427,7 +426,10 @@ const App: React.FC = () => {
     }
     
     
-
+    emitter.EmitUIInteraction(avatarUrl);
+    logger.info( avatarUrl);
+    logger.info( isMobile);
+    
   }, [avatarUrl, emitter,status, streamerStatus]);
 
   // Subscribe to game messages
