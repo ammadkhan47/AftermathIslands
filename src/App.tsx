@@ -414,7 +414,9 @@ const App: React.FC = () => {
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
     emitter.EmitUIInteraction(avatarUrl);
+    const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     logger.info( avatarUrl);
+    logger.info( "Is it mobile? "+isMobile);
     
 
   }, [avatarUrl, emitter,status, streamerStatus]);
