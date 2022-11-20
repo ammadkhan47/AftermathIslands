@@ -419,9 +419,11 @@ const App: React.FC = () => {
     logger.info( isMobile);
     if (isMobile) {
       logger.info( "its a mobile ");
+      logger.info( browserName);
     }
     else{
       logger.info( "its a desktop ");
+      logger.info( browserName);
     }
     
     
