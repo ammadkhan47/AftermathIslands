@@ -424,10 +424,11 @@ const App: React.FC = () => {
     }
   };
 
+  const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
-    
+    logger.info( "streaaaamerrr statuss " + streamerStatus);
     if (isMobile) {
       emitter.EmitUIInteraction("mobile");
       logger.info( "its a mobile ");
