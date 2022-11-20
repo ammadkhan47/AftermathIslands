@@ -158,16 +158,6 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
         title="Ready Player Me"
         ref={iframe}
       ></iframe>
-      <div style={{height:'100vh',width:"100vw"}}>
-        <video className='videoOfBackground' id='videoOfBackground'   playsInline loop>
-          <track kind="captions" {...props} />
-          <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
-        </video>
-        <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
-
-        </svg>
-        <h3>Please wait, your session is loading.</h3>
-      </div>
     </div>
   );
   //RPM
