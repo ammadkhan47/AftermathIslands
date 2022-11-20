@@ -149,14 +149,11 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   };
   return (
     <div>
-      <video style={{height:'0vh',width:"0vw"}} id='videoOfBackground' className='videoOfBackground' autoPlay playsInline loop>
-                <track kind="captions" {...props} />
-                <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
-              </video>
+      
       <iframe id='rpmiframe' className='rpmiframe'
         style={{
           width: "100%",
-          height: "100%",
+          height: "97vh",
         }}
         allow="camera *; microphone *"
         src="https://aftermathislands.readyplayer.me/avatar?frameApi&clearCache"
@@ -172,12 +169,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
           iframe.style.display = 'none';
           iframe.style.height = '0vh';
           iframe.style.width = '0vw';
-          const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
-          el.style.height = '100vh';
-          el.style.width = '100vw';
-          el.style.display="block"
-          el.play();
-          
+                    
           //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
           //ab.style.display="block"
           //ab.play();
@@ -428,7 +420,10 @@ const App: React.FC = () => {
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
-    logger.info( "streaaaamerrr statuss " + streamerStatus);
+    if(streamerStatus==="Connected"){
+      logger.info("i am connected");
+    }
+
     if (isMobile) {
       emitter.EmitUIInteraction("mobile");
       logger.info( "its a mobile ");
