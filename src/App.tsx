@@ -92,10 +92,95 @@ class ClientOptions {
 interface LoadingProps {
   LaunchRequestStatus: LaunchStatusEvent;
   StreamerStatus: StreamerStatus;
+  setAvatarValue: (e: string) => void;
+
 }
 
+
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
+
+  //RPM
+  
+  const iframe = useRef<any>();
+
+  const subscribe = (event: any) => {
+    const json = parse(event);
+    if (json?.source !== "readyplayerme") {
+      return;
+    }
+
+    // Susbribe to all events sent from Ready Player Me once frame is ready
+    if (json.eventName === "v1.frame.ready") {
+      iframe.current.contentWindow.postMessage(
+        JSON.stringify({
+          target: "readyplayerme",
+          type: "subscribe",
+          eventName: "v1.**",
+        }),
+        "*"
+      );
+    }
+
+    // Get avatar GLB URL
+    if (json.eventName === "v1.avatar.exported") {
+      console.log(`Avatar URRRL: ${json.data.url}`);
+      props.setAvatarValue(json.data.url);
+      abc();
+    }
+
+    // Get user id
+    if (json.eventName === "v1.user.set") {
+      console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
+      
+
+    }
+  };
+
+  window.addEventListener("message", subscribe);
+  document.addEventListener("message", subscribe);
+ 
+  const parse = (event: any) => {
+    try {
+      return JSON.parse(event.data);
+    } catch (error) {
+      return null;
+    }
+  };
+  return (
+    <div>
+      <iframe id='rpmiframe' className='rpmiframe'
+        style={{
+          width: "100%",
+          height: "97vh",
+        }}
+        allow="camera *; microphone *"
+        src="https://aftermathislands.readyplayer.me/avatar?frameApi&clearCache"
+        title="Ready Player Me"
+        ref={iframe}
+      ></iframe>
+      <div style={{height:'100vh',width:"100vw"}}>
+        <video className='videoOfBackground' id='videoOfBackground'   playsInline loop>
+          <track kind="captions" {...props} />
+          <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
+        </video>
+        <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
+
+        </svg>
+        <h3>Please wait, your session is loading.</h3>
+      </div>
+    </div>
+  );
+  //RPM
+        function abc(){
+
+          const el=document.getElementById('rpmiframe') as HTMLIFrameElement;
+          el.style.display = 'none';
+          const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
+          ab.style.display="block"
+          ab.play();
+
   if (props.StreamerStatus === StreamerStatus.Connected || props.StreamerStatus === StreamerStatus.Completed) {
+    logger.info("immmmm connnectedddddd");
     return <div />;
   }
 
@@ -146,6 +231,10 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   );
 };
 
+
+}
+
+
 interface ViewProps {
   LaunchRequestStatus: LaunchStatusEvent;
   StreamerStatus: StreamerStatus;
@@ -155,9 +244,11 @@ interface ViewProps {
   UsePointerLock: boolean;
   PointerLockRelease: boolean;
   Resolution: Resolution;
+  setAvatarValue: (e: string) => void;
 }
-
 const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
+
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const handle = useFullScreenHandle();
   // Fullscreen API presently supported on iPad, but not iPhone or iPod
@@ -173,7 +264,7 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
           ExitCallback={() => window.location.reload()} // TODO: How to 'close' a contribution?
         />
 
-        <LoadingView LaunchRequestStatus={props.LaunchRequestStatus} StreamerStatus={props.StreamerStatus} />
+        <LoadingView setAvatarValue={props.setAvatarValue} LaunchRequestStatus={props.LaunchRequestStatus} StreamerStatus={props.StreamerStatus} />
         <VideoStream
           VideoRef={videoRef}
           Emitter={props.InputEmitter}
@@ -244,6 +335,8 @@ const platform = new PlatformNext();
 platform.initialize({ endpoint: clientOptions.Endpoint || 'https://api.pureweb.io' });
 
 const App: React.FC = () => {
+  const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [modelDefinitionUnavailable, setModelDefinitionUnavailable] = useState(false);
   const [modelDefinition, setModelDefinition] = useState(new UndefinedModelDefinition());
   const [availableModels, setAvailableModels] = useState<ModelDefinition[]>();
@@ -300,7 +393,8 @@ const App: React.FC = () => {
     platform,
     launchRequest,
     streamerOptions
-  );
+  );  
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -328,8 +422,12 @@ const App: React.FC = () => {
 
   // Log status messages
   useEffect(() => {
-    logger.info('Status', status, streamerStatus);
-  }, [status, streamerStatus]);
+    logger.info('Status', status, streamerStatus); 
+    emitter.EmitUIInteraction(avatarUrl);
+    logger.info( avatarUrl);
+    
+
+  }, [avatarUrl, emitter,status, streamerStatus]);
 
   // Subscribe to game messages
   useEffect(() => {
@@ -457,6 +555,7 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <EmbeddedView
+      setAvatarValue={setAvatarUrl}
         VideoStream={videoStream}
         StreamerStatus={streamerStatus as StreamerStatus}
         LaunchRequestStatus={status}
