@@ -127,7 +127,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
       console.log(`Avatar URRRL: ${json.data.url}`);
       props.setAvatarValue(json.data.url);
       abc();
-    }
+          }
 
     // Get user id
     if (json.eventName === "v1.user.set") {
@@ -149,7 +149,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   };
   return (
     <div>
-      
+    <div>
       <iframe id='rpmiframe' className='rpmiframe'
         style={{
           width: "100%",
@@ -161,22 +161,37 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
         ref={iframe}
       ></iframe>
     </div>
+    <div style={{height:'0',width:"0"}}>
+    <video id='videoOfBackground' className='videoOfBackground' playsInline loop>
+      <track kind="captions" {...props} />
+      <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
+    </video>
+    <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
+
+    </svg>
+    <h3>Please wait, your session is loading.</h3>
+  </div>
+  </div>
   );
   //RPM
         function abc(){
 
           const iframe=document.getElementById('rpmiframe') as HTMLIFrameElement;
-          iframe.style.display = 'none';
-          iframe.style.height = '0vh';
-          iframe.style.width = '0vw';
-                    
-          //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
-          //ab.style.display="block"
-          //ab.play();
+          if(iframe!=null){
+          iframe.remove()
+          }
+
+          
+          const backgroundvideo=document.getElementById('videoOfBackground') as HTMLVideoElement;
+          if(backgroundvideo!=null){
+          backgroundvideo.style.display="block";
+          backgroundvideo.style.width="100vw";
+          backgroundvideo.style.height="100vh";
+          backgroundvideo.play();
+          }
 
 
   if (props.StreamerStatus === StreamerStatus.Connected || props.StreamerStatus === StreamerStatus.Completed) {
-    logger.info("immmmm connnectedddddd");
     return <div />;
   }
 
@@ -202,11 +217,8 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     );
   } else { 
     content = (
-      <div style={{height:'100vh',width:"100vw"}}>
-        <video className='videoOfBackground' autoPlay playsInline loop>
-          <track kind="captions" {...props} />
-          <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
-        </video>
+      <div style={{height:'100vh',width:"100vw",display:'none'}}>
+        
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
 
         </svg>
@@ -416,11 +428,17 @@ const App: React.FC = () => {
     }
   };
 
-  //const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
+  const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
+    
     if(streamerStatus==="Connected"){
+      
+      if(el!=null){
+        el.remove()
+                }
+
       logger.info("i am connected");
     }
 
@@ -439,7 +457,8 @@ const App: React.FC = () => {
     logger.info( avatarUrl);
     logger.info( isMobile);
     
-  }, [avatarUrl, emitter,status, streamerStatus]);
+    
+  }, [el,avatarUrl, emitter,status, streamerStatus]);
 
   // Subscribe to game messages
   useEffect(() => {
