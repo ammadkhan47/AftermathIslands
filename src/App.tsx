@@ -149,10 +149,14 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   };
   return (
     <div>
+      <video style={{height:'0vh',width:"0vw"}} id='videoOfBackground' className='videoOfBackground' autoPlay playsInline loop>
+                <track kind="captions" {...props} />
+                <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
+              </video>
       <iframe id='rpmiframe' className='rpmiframe'
         style={{
           width: "100%",
-          height: "97vh",
+          height: "100%",
         }}
         allow="camera *; microphone *"
         src="https://aftermathislands.readyplayer.me/avatar?frameApi&clearCache"
@@ -163,21 +167,17 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
   );
   //RPM
         function abc(){
-          let content;
-          const el=document.getElementById('rpmiframe') as HTMLIFrameElement;
-          el.style.display = 'none';
-          content = (
-            <div style={{height:'100vh',width:"100vw"}}>
-              <video className='videoOfBackground' autoPlay playsInline loop>
-                <track kind="captions" {...props} />
-                <source src="/video/AftermathIslandsVideo.mp4" type='video/mp4' />
-              </video>
-              <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
-      
-              </svg>
-              <h3>Please wait, your session is loading.</h3>
-            </div>
-          );
+
+          const iframe=document.getElementById('rpmiframe') as HTMLIFrameElement;
+          iframe.style.display = 'none';
+          iframe.style.height = '0vh';
+          iframe.style.width = '0vw';
+          const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
+          el.style.height = '100vh';
+          el.style.width = '100vw';
+          el.style.display="block"
+          el.play();
+          
           //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
           //ab.style.display="block"
           //ab.play();
@@ -188,7 +188,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     return <div />;
   }
 
-  
+  let content;
 
   if (props.StreamerStatus === StreamerStatus.NotSupported) {
     content = (
