@@ -432,7 +432,15 @@ const App: React.FC = () => {
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
-    
+
+    const value:string="https://www.google.com";
+    if(value.includes("https://")){
+      window.open(value);
+      logger.info(value);
+    }else{
+      logger.info("not abcs");
+    }
+
     if(streamerStatus==="Connected"){
       
       if(el!=null){
@@ -464,6 +472,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const subscription = messageSubject.subscribe(
       (value: string) => {
+        
         logger.info('Message: ' + value);
       },
       (err) => {
