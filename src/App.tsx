@@ -466,7 +466,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const subscription = messageSubject.subscribe(
       (value: string) => {
-        if(value.includes("https://")){
+        if(value.includes("collections")){
       window.open(value);
       logger.info(value);
     }else{
