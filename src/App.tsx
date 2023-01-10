@@ -433,7 +433,7 @@ const App: React.FC = () => {
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
 
-    
+    logger.info("clientversionnnnnnnnn="+client.version);
     
     if(streamerStatus==="Connected"){
       
