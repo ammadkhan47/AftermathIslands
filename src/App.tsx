@@ -439,9 +439,12 @@ const App: React.FC = () => {
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
-
-    logger.info("clientversionnnnnnnnn="+window.location.href);
+    logger.info(window.location.href.includes('testkeyboard'));
     
+    if(window.location.href.includes('testkeyboard')){
+      emitter.EmitUIInteraction("testkeyboard");
+
+    }
     if(streamerStatus==="Connected"){
       
       if(el!=null){
