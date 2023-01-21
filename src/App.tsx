@@ -46,6 +46,10 @@ import logger from './Log';
 import { isMobile, browserName } from "react-device-detect";
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
+
+
+
+
 const client: ClientJson = clientConfig as ClientJson;
 
 class ClientJson {
@@ -318,6 +322,9 @@ if (query['collaboration'] && query['collaboration'] === 'true') {
   clientOptions.LaunchType = 'local';
 }
 
+
+
+
 clientOptions.Endpoint = (query['endpoint'] as string) ?? client.endpoint;
 clientOptions.ProjectId = (query['projectId'] as string) ?? client.projectId;
 clientOptions.ModelId = (query['modelId'] as string) ?? client.modelId;
@@ -433,7 +440,7 @@ const App: React.FC = () => {
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
 
-    
+    logger.info("clientversionnnnnnnnn="+window.location.href);
     
     if(streamerStatus==="Connected"){
       
@@ -466,7 +473,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const subscription = messageSubject.subscribe(
       (value: string) => {
-        if(value.includes("collections")){
+        if((value.includes("collections"))||(value.includes("underarmour"))){
       window.open(value);
       logger.info(value);
     }else{
