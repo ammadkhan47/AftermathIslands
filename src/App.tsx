@@ -99,7 +99,11 @@ interface LoadingProps {
   StreamerStatus: StreamerStatus;
   setAvatarValue: (e: string) => void;
 
+
 }
+
+
+
 
 
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
@@ -157,7 +161,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
       <iframe id='rpmiframe' className='rpmiframe'
         style={{
           width: "100%",
-          height: "97vh",
+          height: "100vh",
         }}
         allow="camera *; microphone *"
         src="https://aftermathislands.readyplayer.me/avatar?frameApi&clearCache"
@@ -351,6 +355,7 @@ platform.initialize({ endpoint: clientOptions.Endpoint || 'https://api.pureweb.i
 
 const App: React.FC = () => {
   //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
+  const [playername, setPlayerName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [modelDefinitionUnavailable, setModelDefinitionUnavailable] = useState(false);
   const [modelDefinition, setModelDefinition] = useState(new UndefinedModelDefinition());
@@ -422,9 +427,17 @@ const App: React.FC = () => {
     audio.srcObject = audioStream;
   }
 
+
+  
+
   const launch = async () => {
     setLoading(true);
     audio.load();
+
+    //set player name----------------------
+      setPlayerName(playername);
+
+      logger.info("jjjjjjjjjjjhhhhhhhhh"+playername);
 
     if (clientOptions.LaunchType !== 'local') {
       try {
@@ -436,10 +449,17 @@ const App: React.FC = () => {
   };
 
   const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
+
   // Log status messages
   useEffect(() => {
     logger.info('Status', status, streamerStatus); 
     logger.info(window.location.href.includes('testkeyboard'));
+
+    if(playername.length>0){
+      emitter.EmitUIInteraction(playername);
+      logger.info("playername==="+playername);
+    }
+    
     
     if(window.location.href.includes('testkeyboard')){
       emitter.EmitUIInteraction("testkeyboard");
@@ -448,7 +468,9 @@ const App: React.FC = () => {
     if(streamerStatus==="Connected"){
       
       if(el!=null){
-        el.remove()
+        el.pause();
+        el.volume=0;
+        el.remove();
                 }
 
       logger.info("i am connected");
@@ -470,7 +492,7 @@ const App: React.FC = () => {
     logger.info( isMobile);
     
     
-  }, [el,avatarUrl, emitter,status, streamerStatus]);
+  }, [el,avatarUrl, emitter,status, streamerStatus, playername]);
 
   // Subscribe to game messages
   useEffect(() => {

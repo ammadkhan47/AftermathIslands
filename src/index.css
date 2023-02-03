@@ -7,7 +7,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: initial;
-  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+  background-image: url('UIopeningScreen.jpg');
+  background-size: cover;
   height: 100%;
   overflow: hidden;
 }
