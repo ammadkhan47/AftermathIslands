@@ -457,7 +457,7 @@ const App: React.FC = () => {
     
     //send player username
     if(playername.length>0){
-      emitter.EmitUIInteraction("playername==="+playername);
+      emitter.EmitUIInteraction("playername="+playername);
       logger.info("playername==="+playername);
     }
     
