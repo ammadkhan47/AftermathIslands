@@ -274,8 +274,8 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
       <FullScreen handle={handle}>
         <IdleTimeout
           Status={props.StreamerStatus}
-          WarningThreshold={300}
-          ExitThreshold={120}
+          WarningThreshold={150}
+          ExitThreshold={60}
           WarningCallback={handle.exit}
           ExitCallback={() => window.location.reload()} // TODO: How to 'close' a contribution?
         />
@@ -435,9 +435,7 @@ const App: React.FC = () => {
     audio.load();
 
     //set player name----------------------
-      setPlayerName(playername);
-
-      logger.info("jjjjjjjjjjjhhhhhhhhh"+playername);
+      setPlayerName((document.getElementById("playername") as HTMLInputElement).value);
 
     if (clientOptions.LaunchType !== 'local') {
       try {
@@ -452,19 +450,19 @@ const App: React.FC = () => {
 
   // Log status messages
   useEffect(() => {
-    logger.info('Status', status, streamerStatus); 
-    logger.info(window.location.href.includes('testkeyboard'));
 
+
+    logger.info('Status', status, streamerStatus); 
+
+    
+    //send player username
     if(playername.length>0){
-      emitter.EmitUIInteraction(playername);
+      emitter.EmitUIInteraction("playername==="+playername);
       logger.info("playername==="+playername);
     }
     
     
-    if(window.location.href.includes('testkeyboard')){
-      emitter.EmitUIInteraction("testkeyboard");
-
-    }
+    //stop and hide video
     if(streamerStatus==="Connected"){
       
       if(el!=null){
@@ -476,9 +474,9 @@ const App: React.FC = () => {
       logger.info("i am connected");
     }
 
+    //check user platform
     if (isMobile) {
       emitter.EmitUIInteraction("mobile");
-      logger.info( "its a mobile ");
       logger.info( browserName);
     }
     else{
@@ -486,10 +484,9 @@ const App: React.FC = () => {
       logger.info( browserName);
     }
     
-    
+    //send avatar url
     emitter.EmitUIInteraction(avatarUrl);
     logger.info( avatarUrl);
-    logger.info( isMobile);
     
     
   }, [el,avatarUrl, emitter,status, streamerStatus, playername]);

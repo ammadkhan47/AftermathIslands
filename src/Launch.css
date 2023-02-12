@@ -5,6 +5,47 @@
   justify-content: center;
 }
 
+
 #launchContainer > div {
   text-align: center;
+}
+
+#playername {
+  font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  text-align: center;
+  width: 230px;
+  background: none;
+  background-size: cover;
+  height: 40px;
+  margin-top: 0px;
+  color: aliceblue;
+  border-style: none;
+  background-image: url('textbox.png');
+  outline: none;
+  
+}
+
+input::placeholder {
+  color: #ffffff9d;
+  opacity: 1;
+}
+
+#NameDescription{
+  font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 0px;
+  display: block;
+  width: 200px;
+  height: 8px;
+  color: aliceblue;
+  
+  
 }
