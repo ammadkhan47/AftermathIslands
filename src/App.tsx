@@ -495,10 +495,10 @@ const App: React.FC = () => {
   useEffect(() => {
     const subscription = messageSubject.subscribe(
       (value: string) => {
-        if((value.includes(".com"))&&(!(value.includes("glb")))){
+        if((value.includes("https://"))&&(!(value.includes("glb")))){
       window.open(value);
       logger.info(value);
-    }else{
+        }else{
       logger.info("not weblink");
     }
 
