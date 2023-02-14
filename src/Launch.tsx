@@ -21,7 +21,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     <div id="launchContainer" >
       
             
-      <div>
+      <div  style={{ zIndex: 20 }}>
         <h1>{client.description}</h1>
 
         
