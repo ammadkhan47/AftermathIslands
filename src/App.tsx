@@ -44,6 +44,7 @@ import clientConfig from './client.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
 import { isMobile, browserName } from "react-device-detect";
+import pkceChallenge from 'pkce-challenge'
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 
@@ -107,6 +108,21 @@ interface LoadingProps {
 
 
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
+
+  const pkceChallenge = require("pkce-challenge").default;
+
+  console.log(pkceChallenge());
+
+  /*
+
+  if(window.location.href.includes("code")){
+
+  }else{
+  window.open("https://dev.aftermath.accelbyte.io/iam/v3/oauth/authorize?response_type=code&client_id=c5ef28c8e1f54d0583144b3e5cb9695e&redirect_uri=https%3A%2F%2Fplay.aftermathislands.com&state=%7B%22csrf%22%3A%22e1e0f113-bcfa-45f7-b8ab-d46ee8a1aafd%22%2C%22payload%22%3A%22%7B%5C%22path%5C%22%3A%5C%22https%3A%2F%2Fplay.aftermathislands.com%5C%22%7D%22%7D&code_challenge=cMWHQ83_6MVGK21-H7B68VzEIkkgzM6U_Dt9keeuFZc&code_challenge_method=S256&createHeadless=true" , "_self");
+  }
+
+*/
+
 
   //RPM
   
@@ -459,6 +475,7 @@ const App: React.FC = () => {
     if(playername.length>0){
       emitter.EmitUIInteraction("playername="+playername);
       logger.info("playername==="+playername);
+      
     }
     
     
