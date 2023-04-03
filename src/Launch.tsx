@@ -4,6 +4,8 @@ import {Button} from 'semantic-ui-react';
 import './Launch.css';
 import clientConfig from './client.json';
 import axios from 'axios';
+import pkceChallenge from 'pkce-challenge';
+import {v4 as uuid} from 'uuid';
 
 const client: ClientJson = clientConfig as ClientJson;
 
@@ -20,40 +22,47 @@ interface LaunchProps {
 
 class AccelbyteAuth {
     static baseURL?: string = process.env.REACT_APP_ACCELBYTE_API
-    static codeChallenge?: string = process.env.REACT_APP_ACCELBYTE_AUTH_CODE_CHALLENGE
-
+    static redirectURL?: string = process.env.REACT_APP_ACCELBYTE_AUTH_REDIRECT_URI
+    static clientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_CLIENT_ID
 }
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
+
+    // check if we come from open id connect
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get("code")
     let state = queryParameters.get("state")
 
     if (code && state) {
-        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/authorize`, {
-            'code': code,
-            'state': state,
-
-        })
-            .then(res => {
-                console.log(res.status);
-                console.log(res.data);
-
+        if (state === sessionStorage.getItem('state')) {
+            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, {
+                'grant_type': 'authorization_code',
+                'code': code,
+                'state': state,
+                'code_verifier': sessionStorage.getItem('code_verifier'),
+                'client_id': AccelbyteAuth.clientId,
+                'redirect_uri': AccelbyteAuth.redirectURL
             })
+                .then(res => {
+                    console.log(res.status);
+                    console.log(res.data);
+                })
+        }
     }
 
 
     return (
         <div id="launchContainer">
-
-
             <div style={{zIndex: 20}}>
                 <h1>{client.description}</h1>
-
-
                 <Button size="massive" color="green" circular icon="play" onClick={playbtn}></Button>
                 <p id="NameDescription"></p>
                 <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
+                <br></br>
+                <br></br>
+                <Button size="massive" color="blue" circular onClick={loginWithAccelbyte}>
+                    Login with Liquid Avatar
+                </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
                  style={{width: 100, position: 'absolute', bottom: 50, right: 10}}/>
@@ -103,6 +112,24 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
         }
+    }
+
+    function loginWithAccelbyte() {
+
+        let challenge = pkceChallenge();
+        let state = JSON.stringify({'csrf': uuid(), "payload": {'path': 'https://play.aftermathislands.com'}});
+        sessionStorage.setItem('state', state);
+        sessionStorage.setItem('code_challenge', challenge.code_challenge);
+        sessionStorage.setItem('code_verifier', challenge.code_verifier);
+
+        window.location.href = AccelbyteAuth.baseURL + '/iam/v3/oauth/authorize'
+            + '?response_type=code'
+            + '&code_challenge_method=S256'
+            + '&createHeadless=true'
+            + '&state=' + state
+            + '&code_challenge=' + challenge.code_challenge
+            + '&client_id=' + AccelbyteAuth.clientId
+            + '&redirect_uri=' + AccelbyteAuth.redirectURL;
     }
 
 };
