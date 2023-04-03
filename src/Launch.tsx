@@ -19,6 +19,7 @@ class ClientJson {
 
 interface LaunchProps {
     Launch: () => void;
+    GameCode: (code: string) => void;
 }
 
 class AccelbyteAuth {
@@ -43,7 +44,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <br></br>
                 <br></br>
                 <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar 7
+                    Login with Liquid Avatar
                 </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
@@ -164,6 +165,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 if (res.status === 200) {
                     let data = res.data;
                     let gameCode = data['code'];
+                    props.GameCode(gameCode);
                 }
 
             })
