@@ -5,6 +5,7 @@ import './Launch.css';
 import clientConfig from './client.json';
 import axios from 'axios';
 import pkceChallenge from 'pkce-challenge';
+import queryString from 'query-string';
 import {v4 as uuid} from 'uuid';
 
 const client: ClientJson = clientConfig as ClientJson;
@@ -35,13 +36,13 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     if (code && state) {
         if (state === sessionStorage.getItem('state')) {
-            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, {
+            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, queryString.stringify({
                 'grant_type': 'authorization_code',
                 'code': code,
                 'code_verifier': sessionStorage.getItem('code_verifier'),
                 'client_id': AccelbyteAuth.clientId,
                 'redirect_uri': AccelbyteAuth.redirectURL
-            }, {
+            }), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -64,7 +65,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <br></br>
                 <br></br>
                 <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar 2
+                    Login with Liquid Avatar 3
                 </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
