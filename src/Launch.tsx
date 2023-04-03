@@ -86,7 +86,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <br></br>
                 <br></br>
                 <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar 5
+                    Login with Liquid Avatar 6
                 </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
