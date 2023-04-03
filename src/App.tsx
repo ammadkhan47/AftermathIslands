@@ -365,6 +365,7 @@ platform.initialize({ endpoint: clientOptions.Endpoint || 'https://api.pureweb.i
 const App: React.FC = () => {
   //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
   const [playername, setPlayerName] = useState("");
+  const [gameToken, setGameToken] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [modelDefinitionUnavailable, setModelDefinitionUnavailable] = useState(false);
   const [modelDefinition, setModelDefinition] = useState(new UndefinedModelDefinition());
@@ -456,10 +457,7 @@ const App: React.FC = () => {
   };
 
   const passGameCode = (code: string) => {
-      //send player code
-      console.log('code right here', code);
-      emitter.EmitUIInteraction("gametoken="+code);
-      logger.info("gametoken==="+code);
+      setGameToken(code);
   }
 
   const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
@@ -469,6 +467,13 @@ const App: React.FC = () => {
 
 
     logger.info('Status', status, streamerStatus);
+
+    // send game token
+      if (gameToken.length>0) {
+          console.log('code right here', gameToken);
+          emitter.EmitUIInteraction("gametoken="+gameToken);
+          logger.info("gametoken==="+gameToken);
+      }
 
 
     //send player username
@@ -506,7 +511,7 @@ const App: React.FC = () => {
     logger.info( avatarUrl);
 
 
-  }, [el,avatarUrl, emitter,status, streamerStatus, playername]);
+  }, [el,avatarUrl, emitter,status, streamerStatus, playername, gameToken]);
 
   // Subscribe to game messages
   useEffect(() => {
