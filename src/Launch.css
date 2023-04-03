@@ -5,6 +5,10 @@
   justify-content: center;
 }
 
+#hide {
+  display: none !important;
+}
+
 
 #launchContainer > div {
   text-align: center;
@@ -26,7 +30,7 @@
   border-style: none;
   background-image: url('textbox.png');
   outline: none;
-  
+
 }
 
 input::placeholder {
@@ -46,6 +50,6 @@ input::placeholder {
   width: 200px;
   height: 8px;
   color: aliceblue;
-  
-  
+
+
 }

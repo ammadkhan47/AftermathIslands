@@ -38,7 +38,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, {
                 'grant_type': 'authorization_code',
                 'code': code,
-                'state': state,
                 'code_verifier': sessionStorage.getItem('code_verifier'),
                 'client_id': AccelbyteAuth.clientId,
                 'redirect_uri': AccelbyteAuth.redirectURL
@@ -64,7 +63,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
                 <br></br>
                 <br></br>
-                <Button size="massive" color="blue" circular onClick={loginWithAccelbyte}>
+                <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
                     Login with Liquid Avatar 2
                 </Button>
             </div>
