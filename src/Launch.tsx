@@ -42,6 +42,10 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 'code_verifier': sessionStorage.getItem('code_verifier'),
                 'client_id': AccelbyteAuth.clientId,
                 'redirect_uri': AccelbyteAuth.redirectURL
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             })
                 .then(res => {
                     console.log(res.status);
@@ -61,7 +65,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <br></br>
                 <br></br>
                 <Button size="massive" color="blue" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar
+                    Login with Liquid Avatar 2
                 </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
