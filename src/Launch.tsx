@@ -50,21 +50,28 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 }
             })
                 .then(res => {
+                    console.log(res.status);
+                    console.log(res.data);
                     if (res.status === 200) {
                         let data = res.data;
                         let accessToken = data['access_token'];
-                        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
-                            queryString.stringify({
-                                'client_id': AccelbyteAuth.exchangeClientId
-                            }), {
-                                headers: {
-                                    'Authorization': accessToken,
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                }
-                            })
+                        setTimeout(() => {
+                            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
+                                queryString.stringify({
+                                    'client_id': AccelbyteAuth.exchangeClientId
+                                }), {
+                                    headers: {
+                                        'Authorization': accessToken,
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    }
+                                })
+                                .then(res => {
+                                    console.log(res.status);
+                                    console.log(res.data);
+                                })
+                        }, 300);
+
                     }
-                    console.log(res.status);
-                    console.log(res.data);
                 })
         }
     }
