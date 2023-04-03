@@ -61,7 +61,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                                     'client_id': AccelbyteAuth.exchangeClientId
                                 }), {
                                     headers: {
-                                        'Authorization': accessToken,
+                                        'Authorization': 'Bearer ' + accessToken,
                                         'Content-Type': 'application/x-www-form-urlencoded'
                                     }
                                 })
@@ -86,7 +86,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 <br></br>
                 <br></br>
                 <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar 6
+                    Login with Liquid Avatar 7
                 </Button>
             </div>
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
