@@ -457,11 +457,8 @@ const App: React.FC = () => {
 
   const passGameCode = (code: string) => {
       //send player code
-      if(playername.length>0){
-          emitter.EmitUIInteraction("gametoken="+code);
-          logger.info("gametoken==="+code);
-
-      }
+      emitter.EmitUIInteraction("gametoken="+code);
+      logger.info("gametoken==="+code);
   }
 
   const el=document.getElementById('videoOfBackground') as HTMLVideoElement;
