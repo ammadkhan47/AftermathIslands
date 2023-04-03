@@ -99,17 +99,20 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     function loginWithAccelbyte() {
 
-        let challenge = pkceChallenge();
-        let state = JSON.stringify({'csrf': uuid(), "payload": {'path': 'https://play.aftermathislands.com'}});
-        sessionStorage.setItem('state', state);
-        sessionStorage.setItem('code_challenge', challenge.code_challenge);
-        sessionStorage.setItem('code_verifier', challenge.code_verifier);
-
         // https://play.aftermathislands.com/?modelId=13a1eb88-4d53-4eca-875e-20cae0de4acb&version=08dfhc
         // check for model id and version
         let queryParameters = new URLSearchParams(window.location.search)
         let modelId = queryParameters.get("modelId")
         let version = queryParameters.get("version")
+        let redirectURL = AccelbyteAuth.redirectURL +
+            (modelId && version ? `/?modelId=${modelId}&version=${version}` : '');
+        sessionStorage.setItem('redirect_uri', encodeURI(redirectURL));
+
+            let challenge = pkceChallenge();
+        let state = JSON.stringify({'csrf': uuid(), "payload": {'path': 'https://play.aftermathislands.com'}});
+        sessionStorage.setItem('state', state);
+        sessionStorage.setItem('code_challenge', challenge.code_challenge);
+        sessionStorage.setItem('code_verifier', challenge.code_verifier);
 
         window.location.href = AccelbyteAuth.baseURL + '/iam/v3/oauth/authorize'
             + '?response_type=code'
@@ -120,7 +123,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             + '&state=' + state
             + '&code_challenge=' + challenge.code_challenge
             + '&client_id=' + AccelbyteAuth.clientId
-            + '&redirect_uri=' + AccelbyteAuth.redirectURL;
+            + '&redirect_uri=' + sessionStorage.getItem('redirect_uri');
     }
 
     function checkAccelbyteRedirect() {
@@ -140,7 +143,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             'code': code,
             'code_verifier': sessionStorage.getItem('code_verifier'),
             'client_id': AccelbyteAuth.clientId,
-            'redirect_uri': AccelbyteAuth.redirectURL
+            'redirect_uri': sessionStorage.getItem('redirect_uri')
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
