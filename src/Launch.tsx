@@ -25,6 +25,8 @@ class AccelbyteAuth {
     static baseURL?: string = process.env.REACT_APP_ACCELBYTE_API
     static redirectURL?: string = process.env.REACT_APP_ACCELBYTE_AUTH_REDIRECT_URI
     static clientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_CLIENT_ID
+    static exchangeNamespace?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_NAMESPACE
+    static exchangeClientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_CLIENT_ID
 }
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
@@ -48,12 +50,23 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 }
             })
                 .then(res => {
+                    if (res.status === 200) {
+                        let data = res.data;
+                        let accessToken = data['access_token'];
+                        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
+                            queryString.stringify({
+                                'client_id': AccelbyteAuth.exchangeClientId
+                            }), {
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            })
+                    }
                     console.log(res.status);
                     console.log(res.data);
                 })
         }
     }
-
 
     return (
         <div id="launchContainer">
