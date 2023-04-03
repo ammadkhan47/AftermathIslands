@@ -44,7 +44,6 @@ import clientConfig from './client.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
 import { isMobile, browserName } from "react-device-detect";
-// import pkceChallenge from 'pkce-challenge'
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 
@@ -109,7 +108,6 @@ interface LoadingProps {
 
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
 
-  const pkceChallenge = require("pkce-challenge").default;
 
   /*
 
