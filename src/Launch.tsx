@@ -105,10 +105,18 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         sessionStorage.setItem('code_challenge', challenge.code_challenge);
         sessionStorage.setItem('code_verifier', challenge.code_verifier);
 
+        // https://play.aftermathislands.com/?modelId=13a1eb88-4d53-4eca-875e-20cae0de4acb&version=08dfhc
+        // check for model id and version
+        let queryParameters = new URLSearchParams(window.location.search)
+        let modelId = queryParameters.get("modelId")
+        let version = queryParameters.get("version")
+
         window.location.href = AccelbyteAuth.baseURL + '/iam/v3/oauth/authorize'
             + '?response_type=code'
             + '&code_challenge_method=S256'
             + '&createHeadless=true'
+            + (modelId ? '&modelId=' + modelId : '')
+            + (version ? '&version=' + version : '')
             + '&state=' + state
             + '&code_challenge=' + challenge.code_challenge
             + '&client_id=' + AccelbyteAuth.clientId
