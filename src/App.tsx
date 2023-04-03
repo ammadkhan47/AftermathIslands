@@ -457,6 +457,7 @@ const App: React.FC = () => {
 
   const passGameCode = (code: string) => {
       //send player code
+      console.log('code right here', code);
       emitter.EmitUIInteraction("gametoken="+code);
       logger.info("gametoken==="+code);
   }
