@@ -110,7 +110,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         console.log(version);
         let redirectURL = AccelbyteAuth.redirectURL +
             (modelId && version ? `/?modelId=${modelId}&version=${version}` : '');
-        sessionStorage.setItem('redirect_uri', encodeURIComponent(redirectURL));
+        sessionStorage.setItem('redirect_uri', redirectURL);
 
             let challenge = pkceChallenge();
         let state = JSON.stringify({'csrf': uuid(), "payload": {'path': 'https://play.aftermathislands.com'}});
@@ -125,7 +125,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             + '&state=' + state
             + '&code_challenge=' + challenge.code_challenge
             + '&client_id=' + AccelbyteAuth.clientId
-            + '&redirect_uri=' + sessionStorage.getItem('redirect_uri');
+            + '&redirect_uri=' + encodeURIComponent(sessionStorage.getItem('redirect_uri') || '');
     }
 
     function checkAccelbyteRedirect() {
