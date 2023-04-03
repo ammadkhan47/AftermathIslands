@@ -104,6 +104,10 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         let queryParameters = new URLSearchParams(window.location.search)
         let modelId = queryParameters.get("modelId")
         let version = queryParameters.get("version")
+        console.log('modelId');
+        console.log(modelId);
+        console.log('version');
+        console.log(version);
         let redirectURL = AccelbyteAuth.redirectURL +
             (modelId && version ? `/?modelId=${modelId}&version=${version}` : '');
         sessionStorage.setItem('redirect_uri', encodeURI(redirectURL));
@@ -118,8 +122,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             + '?response_type=code'
             + '&code_challenge_method=S256'
             + '&createHeadless=true'
-            + (modelId ? '&modelId=' + modelId : '')
-            + (version ? '&version=' + version : '')
             + '&state=' + state
             + '&code_challenge=' + challenge.code_challenge
             + '&client_id=' + AccelbyteAuth.clientId
