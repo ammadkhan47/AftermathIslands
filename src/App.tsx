@@ -1,13 +1,13 @@
 /**
  * This reference template is designed to showcase the elements used to construct your own
  * application.
- * 
+ *
  * When developing take care to:
  *  - Retain user interaction to begin audio.
  *  - Understand video sizing and mobile screen orientation.
- 
+
  * See attached documentation for reference. Contact support@pureweb.com with any questions.
- * 
+ *
  *
  * Copyright (C) PureWeb 2020
  */
@@ -111,6 +111,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
 
   const pkceChallenge = require("pkce-challenge").default;
 
+  console.log('pkceChallenge()');
   console.log(pkceChallenge());
 
   /*
@@ -125,7 +126,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
 
 
   //RPM
-  
+
   const iframe = useRef<any>();
 
   const subscribe = (event: any) => {
@@ -156,14 +157,14 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     // Get user id
     if (json.eventName === "v1.user.set") {
       console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
-      
+
 
     }
   };
 
   window.addEventListener("message", subscribe);
   document.addEventListener("message", subscribe);
- 
+
   const parse = (event: any) => {
     try {
       return JSON.parse(event.data);
@@ -193,7 +194,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
     <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
 
     </svg>
-    
+
   </div>
   </div>
   );
@@ -205,7 +206,7 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
           iframe.remove()
           }
 
-          
+
           const backgroundvideo=document.getElementById('videoOfBackground') as HTMLVideoElement;
           if(backgroundvideo!=null){
           backgroundvideo.style.display="block";
@@ -239,10 +240,10 @@ const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
         <h3>Please refresh to request a new session.</h3>
       </div>
     );
-  } else { 
+  } else {
     content = (
       <div style={{height:'100vh',width:"100vw"}}>
-        
+
         <svg className="logo" viewBox="410.5 265.5 90.12054 104.02344">
 
         </svg>
@@ -429,7 +430,7 @@ const App: React.FC = () => {
     platform,
     launchRequest,
     streamerOptions
-  );  
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -444,7 +445,7 @@ const App: React.FC = () => {
   }
 
 
-  
+
 
   const launch = async () => {
     setLoading(true);
@@ -468,20 +469,20 @@ const App: React.FC = () => {
   useEffect(() => {
 
 
-    logger.info('Status', status, streamerStatus); 
+    logger.info('Status', status, streamerStatus);
 
-    
+
     //send player username
     if(playername.length>0){
       emitter.EmitUIInteraction("playername="+playername);
       logger.info("playername==="+playername);
-      
+
     }
-    
-    
+
+
     //stop and hide video
     if(streamerStatus==="Connected"){
-      
+
       if(el!=null){
         el.pause();
         el.volume=0;
@@ -500,12 +501,12 @@ const App: React.FC = () => {
       logger.info( "its a desktop ");
       logger.info( browserName);
     }
-    
+
     //send avatar url
     emitter.EmitUIInteraction(avatarUrl);
     logger.info( avatarUrl);
-    
-    
+
+
   }, [el,avatarUrl, emitter,status, streamerStatus, playername]);
 
   // Subscribe to game messages
