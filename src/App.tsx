@@ -47,9 +47,6 @@ import { isMobile, browserName } from "react-device-detect";
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 
-
-
-
 const client: ClientJson = clientConfig as ClientJson;
 
 class ClientJson {

@@ -31,50 +31,7 @@ class AccelbyteAuth {
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
-    // check if we come from open id connect
-    let queryParameters = new URLSearchParams(window.location.search)
-    let code = queryParameters.get("code")
-    let state = queryParameters.get("state")
-
-    if (code && state) {
-        if (state === sessionStorage.getItem('state')) {
-            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, queryString.stringify({
-                'grant_type': 'authorization_code',
-                'code': code,
-                'code_verifier': sessionStorage.getItem('code_verifier'),
-                'client_id': AccelbyteAuth.clientId,
-                'redirect_uri': AccelbyteAuth.redirectURL
-            }), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
-                .then(res => {
-                    console.log(res.status);
-                    console.log(res.data);
-                    if (res.status === 200) {
-                        let data = res.data;
-                        let accessToken = data['access_token'];
-                        setTimeout(() => {
-                            axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
-                                queryString.stringify({
-                                    'client_id': AccelbyteAuth.exchangeClientId
-                                }), {
-                                    headers: {
-                                        'Authorization': 'Bearer ' + accessToken,
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    }
-                                })
-                                .then(res => {
-                                    console.log(res.status);
-                                    console.log(res.data);
-                                })
-                        }, 300);
-
-                    }
-                })
-        }
-    }
+    checkAccelbyteRedirect();
 
     return (
         <div id="launchContainer">
@@ -155,6 +112,61 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             + '&code_challenge=' + challenge.code_challenge
             + '&client_id=' + AccelbyteAuth.clientId
             + '&redirect_uri=' + AccelbyteAuth.redirectURL;
+    }
+
+    function checkAccelbyteRedirect() {
+        // check if we come from open id connect
+        let queryParameters = new URLSearchParams(window.location.search)
+        let code = queryParameters.get("code")
+        let state = queryParameters.get("state")
+
+        if (code && state && state === sessionStorage.getItem('state')) {
+            getAccessToken(code);
+        }
+    }
+
+    function getAccessToken(code: string) {
+        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, queryString.stringify({
+            'grant_type': 'authorization_code',
+            'code': code,
+            'code_verifier': sessionStorage.getItem('code_verifier'),
+            'client_id': AccelbyteAuth.clientId,
+            'redirect_uri': AccelbyteAuth.redirectURL
+        }), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+            .then(res => {
+                console.log(res.status);
+                console.log(res.data);
+                if (res.status === 200) {
+                    let data = res.data;
+                    let accessToken = data['access_token'];
+                    getGameCode(accessToken);
+                }
+            })
+    }
+
+    function getGameCode(accessToken: string) {
+        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
+            queryString.stringify({
+                'client_id': AccelbyteAuth.exchangeClientId
+            }), {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(res => {
+                console.log(res.status);
+                console.log(res.data);
+                if (res.status === 200) {
+                    let data = res.data;
+                    let gameCode = data['code'];
+                }
+
+            })
     }
 
 };
