@@ -110,7 +110,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         console.log(version);
         let redirectURL = AccelbyteAuth.redirectURL +
             (modelId && version ? `/?modelId=${modelId}&version=${version}` : '');
-        sessionStorage.setItem('redirect_uri', encodeURI(redirectURL));
+        sessionStorage.setItem('redirect_uri', encodeURIComponent(redirectURL));
 
             let challenge = pkceChallenge();
         let state = JSON.stringify({'csrf': uuid(), "payload": {'path': 'https://play.aftermathislands.com'}});
