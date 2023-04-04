@@ -187,6 +187,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     let data = res.data;
                     let gameCode = data['code'];
                     props.GameCode(gameCode);
+                    props.Launch();
                 }
 
             })
