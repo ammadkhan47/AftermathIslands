@@ -36,17 +36,25 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     return (
         <div id="launchContainer">
-            <div style={{zIndex: 20}}>
-                <h1>{client.description}</h1>
-                <Button size="massive" color="green" circular icon="play" onClick={playbtn}></Button>
-                <p id="NameDescription"></p>
-                <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
-                <br></br>
-                <br></br>
-                <Button size="massive" color="blue" id="hide" circular onClick={loginWithAccelbyte}>
-                    Login with Liquid Avatar
-                </Button>
+            <div id="login-buttons-wrap">
+                <div id="login-left" style={{zIndex: 20}}>
+                    <h2>Try it out with <br></br> limited functionality</h2>
+                    <h1>{client.description}</h1>
+                    <Button size="massive" color="green" circular icon="play" onClick={playbtn}></Button>
+                    <p id="NameDescription"></p>
+                    <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
+                </div>
+                <div id="login-middle">
+                    <h2>OR</h2>
+                </div>
+                <div id="login-right">
+                    <h2>Login with your <br></br> Meta ParkPass ™</h2>
+                    <Button size="massive" color="blue" circular onClick={loginWithAccelbyte}>
+                        <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png" />
+                    </Button>
+                </div>
             </div>
+
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
                  style={{width: 100, position: 'absolute', bottom: 50, right: 10}}/>
 
@@ -54,7 +62,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 width: '370px',
                 height: '130px',
                 position: 'absolute',
-                top: 100,
+                top: 80,
                 right: 0,
                 left: 0,
                 margin: 'auto',
