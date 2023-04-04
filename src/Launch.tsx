@@ -187,7 +187,9 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     let data = res.data;
                     let gameCode = data['code'];
                     props.GameCode(gameCode);
+                    if(gameCode.length>0){
                     props.Launch();
+                    }
                 }
 
             })
