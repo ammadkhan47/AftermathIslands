@@ -62,6 +62,7 @@
   width: 100%;
   max-width: 220px;
   float: left;
+  display: none;
 }
 
 #login-right > button {
