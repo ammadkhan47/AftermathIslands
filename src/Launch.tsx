@@ -188,6 +188,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     let gameCode = data['code'];
                     props.GameCode(gameCode);
 
+                    /*
                     setTimeout(function(){
                     console.log('timeout function');
                         if(gameCode.length>0){
@@ -196,7 +197,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                    
                 
                    }, 5000);
-                    
+                    */
                     
                 }
 

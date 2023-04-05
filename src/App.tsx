@@ -44,6 +44,7 @@ import clientConfig from './client.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
 import { isMobile, browserName } from "react-device-detect";
+
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
 
@@ -104,6 +105,8 @@ interface LoadingProps {
 
 
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
+
+  
 
 
   /*
@@ -505,6 +508,9 @@ const App: React.FC = () => {
       logger.info( "its a desktop ");
       logger.info( browserName);
     }
+
+
+    
 
     //send avatar url
     emitter.EmitUIInteraction(avatarUrl);
