@@ -31,10 +31,15 @@ class AccelbyteAuth {
 }
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
+    
     useEffect(() => {
         unhideLogin();
         checkAccelbyteRedirect();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    
+
 
     return (
 
@@ -219,13 +224,10 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     console.log(modelId);
                     console.log('version after getting game code');
                     console.log(version);
+                    if (gameCode.length > 0) {
+                        props.Launch();
+                    }
 
-                    
-                   
-                        if(gameCode.length>0){
-                   props.Launch();
-                   } 
-                    
 
                 }
 
