@@ -22,6 +22,8 @@
   margin: 5px 5px 20px 5px;
   padding-bottom: 15px;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 #login-left {
@@ -55,7 +57,7 @@
   max-width: 30px;
   float: left;
   text-align: center;
-  display: none;
+  
 }
 
 
@@ -63,7 +65,7 @@
   width: 100%;
   max-width: 220px;
   float: left;
-  display: none;
+  
 }
 
 #login-right > button {
