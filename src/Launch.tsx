@@ -30,15 +30,22 @@ class AccelbyteAuth {
     static exchangeClientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_CLIENT_ID
 }
 
+class LiquidAvatarAuth {
+    static baseURL?: string = process.env.REACT_APP_LIQUID_AVATAR_API
+    static redirectURL?: string = process.env.REACT_APP_LIQUID_AVATAR_REDIRECT_URI
+    static clientId?: string = process.env.REACT_APP_LIQUID_AVATAR_CLIENT_ID
+    static codeChallenge?: string = process.env.REACT_APP_LIQUID_AVATAR_CODE_CHALLENGE
+    static codeVerifier?: string = process.env.REACT_APP_LIQUID_AVATAR_CODE_VERIFIER
+}
+
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
-    
+
     useEffect(() => {
         unhideLogin();
         checkAccelbyteRedirect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    
 
 
     return (
@@ -56,10 +63,20 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     <h2>OR</h2>
                 </div>
                 <div id="login-right">
-                    <h2>Login with your <br></br> Meta ParkPass ™</h2>
-                    <Button size="massive" color="blue" circular onClick={loginWithAccelbyte}>
-                        <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png" />
-                    </Button>
+                    <form autoComplete="off" action={LiquidAvatarAuth.baseURL+'/auth'} method="post">
+                        <h2>Login with your <br></br> Meta ParkPass ™</h2>
+                        <input required type="text" hidden name="client_id" value={LiquidAvatarAuth.clientId} />
+                        <input required type="text" hidden name="response_type" value="code"/>
+                        <input required type="text" hidden name="response_mode" value="query"/>
+                        <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
+                        <input type="text" hidden name="code_challenge" value={LiquidAvatarAuth.codeChallenge}/>
+                        <input type="text" hidden name="code_challenge_method" value="S256"/>
+                        <input required hidden type="text" name="scope" value="openid"/>
+                        <Button type="submit" size="massive" color="blue" circular>
+                            <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png" />
+                        </Button>
+                    </form>
+
                 </div>
             </div>
 
