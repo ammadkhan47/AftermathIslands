@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from 'semantic-ui-react';
 
 import './Launch.css';
@@ -6,7 +6,6 @@ import clientConfig from './client.json';
 import axios from 'axios';
 import pkceChallenge from 'pkce-challenge';
 import queryString from 'query-string';
-import { v4 as uuid } from 'uuid';
 
 const client: ClientJson = clientConfig as ClientJson;
 
@@ -24,8 +23,8 @@ interface LaunchProps {
 
 class AccelbyteAuth {
     static baseURL?: string = process.env.REACT_APP_ACCELBYTE_API
-    static redirectURL?: string = process.env.REACT_APP_ACCELBYTE_AUTH_REDIRECT_URI
     static clientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_CLIENT_ID
+    static platformId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_PLATFORM_ID
     static exchangeNamespace?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_NAMESPACE
     static exchangeClientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_CLIENT_ID
 }
@@ -34,19 +33,19 @@ class LiquidAvatarAuth {
     static baseURL?: string = process.env.REACT_APP_LIQUID_AVATAR_API
     static redirectURL?: string = process.env.REACT_APP_LIQUID_AVATAR_REDIRECT_URI
     static clientId?: string = process.env.REACT_APP_LIQUID_AVATAR_CLIENT_ID
-    static codeChallenge?: string = process.env.REACT_APP_LIQUID_AVATAR_CODE_CHALLENGE
-    static codeVerifier?: string = process.env.REACT_APP_LIQUID_AVATAR_CODE_VERIFIER
+    static clientSecret?: string = process.env.REACT_APP_LIQUID_AVATAR_CLIENT_SECRET
 }
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
+    const [codeChallenge, setCodeChallenge] = useState("");
+    const [codeVerifier, setCodeVerifier] = useState("");
+
     useEffect(() => {
         unhideLogin();
-        checkAccelbyteRedirect();
+        setupLoginWithOpenIDConnect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
+    }, []);
 
     return (
 
@@ -69,7 +68,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         <input required type="text" hidden name="response_type" value="code"/>
                         <input required type="text" hidden name="response_mode" value="query"/>
                         <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
-                        <input type="text" hidden name="code_challenge" value={LiquidAvatarAuth.codeChallenge}/>
+                        <input type="text" hidden name="code_challenge" value={codeChallenge}/>
                         <input type="text" hidden name="code_challenge_method" value="S256"/>
                         <input required hidden type="text" name="scope" value="openid"/>
                         <Button type="submit" size="massive" color="blue" circular>
@@ -119,8 +118,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     );
 
-
-
     function unhideLogin() {
 
         if (!(window.location.href.includes("testing"))) {
@@ -132,15 +129,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         }
     }
 
-
-
-
-
     function playbtn() {
         nameInput = document.getElementById("playername") as HTMLInputElement;
-
-
-
 
         if (nameInput.value.length > 0) {
 
@@ -150,74 +140,77 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         }
     }
 
-    function loginWithAccelbyte() {
+    async function setupLoginWithOpenIDConnect() {
+        // check if we have an OpenID Connect authorization code in the URL
+        let queryParameters = new URLSearchParams(window.location.search);
+        let authorizationCode = queryParameters.get("code");
 
-
-        // https://play.aftermathislands.com/?modelId=13a1eb88-4d53-4eca-875e-20cae0de4acb&version=08dfhc
-        // check for model id and version
-        let queryParameters = new URLSearchParams(window.location.search)
-        let modelId = queryParameters.get("modelId")
-        let version = queryParameters.get("version")
-        console.log('modelId');
-        console.log(modelId);
-        console.log('version');
-        console.log(version);
-        let redirectURL = AccelbyteAuth.redirectURL +
-            (modelId && version ? `/?modelId=${modelId}&version=${version}` : '');
-        sessionStorage.setItem('redirect_uri', redirectURL);
-
-        let challenge = pkceChallenge();
-        let state = JSON.stringify({ 'csrf': uuid(), "payload": { 'path': 'https://play.aftermathislands.com' } });
-        sessionStorage.setItem('state', state);
-        sessionStorage.setItem('code_challenge', challenge.code_challenge);
-        sessionStorage.setItem('code_verifier', challenge.code_verifier);
-
-        window.location.href = AccelbyteAuth.baseURL + '/iam/v3/oauth/authorize'
-            + '?response_type=code'
-            + '&code_challenge_method=S256'
-            + '&createHeadless=true'
-            + '&state=' + state
-            + '&code_challenge=' + challenge.code_challenge
-            + '&client_id=' + AccelbyteAuth.clientId
-            + '&redirect_uri=' + encodeURIComponent(sessionStorage.getItem('redirect_uri') || '');
-    }
-
-    function checkAccelbyteRedirect() {
-        // check if we come from open id connect
-        let queryParameters = new URLSearchParams(window.location.search)
-        let code = queryParameters.get("code")
-        let state = queryParameters.get("state")
-
-        if (code && state && state === sessionStorage.getItem('state')) {
-            getAccessToken(code);
+        // if we have one, we proceed to log in with it
+        if (authorizationCode) {
+            let openIDToken = await getOpenIDToken(authorizationCode);
+            if (openIDToken) {
+                let accelbyteAccessToken = await getAccelbyteAccessToken(openIDToken);
+                if (accelbyteAccessToken) {
+                    getGameCode(accelbyteAccessToken);
+                }
+            }
+        } else {
+            // setup pkce for future use
+            let challenge = pkceChallenge();
+            sessionStorage.setItem('code_challenge', challenge.code_challenge);
+            sessionStorage.setItem('code_verifier', challenge.code_verifier);
         }
+
+        let codeChallenge = sessionStorage.getItem('code_challenge');
+        let codeVerifier = sessionStorage.getItem('code_verifier');
+
+        setCodeChallenge(codeChallenge!);
+        setCodeVerifier(codeVerifier!);
     }
 
-    function getAccessToken(code: string) {
-        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/token`, queryString.stringify({
+    async function getOpenIDToken(authorizationCode: string) {
+        let response = await axios.post(`${LiquidAvatarAuth.baseURL}/token`, queryString.stringify({
             'grant_type': 'authorization_code',
-            'code': code,
-            'code_verifier': sessionStorage.getItem('code_verifier'),
+            'code': authorizationCode,
+            'code_verifier': codeVerifier,
             'client_id': AccelbyteAuth.clientId,
-            'redirect_uri': sessionStorage.getItem('redirect_uri')
         }), {
+            auth: {
+                username: LiquidAvatarAuth.clientId!,
+                password: LiquidAvatarAuth.clientSecret!
+            },
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        })
-            .then(res => {
-                console.log(res.status);
-                console.log(res.data);
-                if (res.status === 200) {
-                    let data = res.data;
-                    let accessToken = data['access_token'];
-                    getGameCode(accessToken);
-                }
-            })
+        });
+        console.log(response.status);
+        console.log(response.data);
+
+        return response.status === 200 ? response.data['id_token'] : '';
     }
 
-    function getGameCode(accessToken: string) {
-        axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
+    async function getAccelbyteAccessToken(openIDToken: string) {
+        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/oauth/platforms/${AccelbyteAuth.platformId}/token`, queryString.stringify({
+            'client_id': AccelbyteAuth.clientId,
+            'platform_token': openIDToken
+        }), {
+            auth: {
+                username: AccelbyteAuth.clientId!,
+                password: ''
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        console.log(response.status);
+        console.log(response.data);
+
+        return response.status === 200 ? response.data['access_token'] : '';
+    }
+
+    async function getGameCode(accessToken: string) {
+        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/namespace/${AccelbyteAuth.exchangeNamespace}/token/request`,
             queryString.stringify({
                 'client_id': AccelbyteAuth.exchangeClientId
             }), {
@@ -225,30 +218,27 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        })
-            .then(res => {
-                console.log(res.status);
-                console.log(res.data);
-                if (res.status === 200) {
-                    let data = res.data;
-                    let gameCode = data['code'];
-                    props.GameCode(gameCode);
+        });
 
-                    let queryParameters = new URLSearchParams(window.location.search)
-                    let modelId = queryParameters.get("modelId")
-                    let version = queryParameters.get("version")
-                    console.log('modelId after getting game code');
-                    console.log(modelId);
-                    console.log('version after getting game code');
-                    console.log(version);
-                    if (gameCode.length > 0) {
-                        props.Launch();
-                    }
+        console.log(response.status);
+        console.log(response.data);
 
+        if (response.status === 200) {
+            let data = response.data;
+            let gameCode = data['code'];
+            props.GameCode(gameCode);
 
-                }
-
-            })
+            let queryParameters = new URLSearchParams(window.location.search)
+            let modelId = queryParameters.get("modelId")
+            let version = queryParameters.get("version")
+            console.log('modelId after getting game code');
+            console.log(modelId);
+            console.log('version after getting game code');
+            console.log(version);
+            if (gameCode.length > 0) {
+                props.Launch();
+            }
+        }
 
     }
 
