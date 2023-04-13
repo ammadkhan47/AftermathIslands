@@ -38,8 +38,8 @@ class LiquidAvatarAuth {
 
 export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
-    const [codeChallenge, setCodeChallenge] = useState("");
-    const [codeVerifier, setCodeVerifier] = useState("");
+    const [codeChallenge, setCodeChallenge] = useState(sessionStorage.getItem('code_challenge') || '');
+    const [codeVerifier, setCodeVerifier] = useState(sessionStorage.getItem('code_verifier') || '');
 
     useEffect(() => {
         unhideLogin();
