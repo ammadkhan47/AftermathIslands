@@ -173,7 +173,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             'grant_type': 'authorization_code',
             'code': authorizationCode,
             'code_verifier': codeVerifier,
-            'client_id': AccelbyteAuth.clientId,
+            'client_id': LiquidAvatarAuth.clientId,
         }), {
             auth: {
                 username: LiquidAvatarAuth.clientId!,
