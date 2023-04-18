@@ -119,13 +119,15 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     );
 
     function unhideLogin() {
-
+        const loginLeft = document.getElementById("login-left") as HTMLElement;
+        const loginMiddle = document.getElementById("login-middle") as HTMLElement;
+        const loginRight = document.getElementById("login-right") as HTMLElement;
         if (!(window.location.href.includes("testing"))) {
-            const ab = document.getElementById("login-middle") as HTMLElement;
-            const cd = document.getElementById("login-right") as HTMLElement;
-            ab.style.display = "none";
-            cd.style.display = "none";
-
+            loginMiddle.style.display = "none";
+            loginRight.style.display = "none";
+        } else {
+            loginLeft.style.display = "none";
+            loginMiddle.style.display = "none";
         }
     }
 
