@@ -122,7 +122,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         const loginLeft = document.getElementById("login-left") as HTMLElement;
         const loginMiddle = document.getElementById("login-middle") as HTMLElement;
         const loginRight = document.getElementById("login-right") as HTMLElement;
-        if (!(window.location.href.includes("testing"))) {
+        if (!(window.location.href.includes("testing"))||(window.location.href.includes("code"))) {
             loginMiddle.style.display = "none";
             loginRight.style.display = "none";
         } else {
@@ -238,9 +238,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             console.log(modelId);
             console.log('version after getting game code');
             console.log(version);
-            if (gameCode.length > 0) {
+           /* 
+           if (gameCode.length > 0) {
                 props.Launch();
             }
+            */
         }
 
     }
