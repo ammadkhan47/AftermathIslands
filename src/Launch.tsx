@@ -176,6 +176,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             'code': authorizationCode,
             'code_verifier': codeVerifier,
             'client_id': LiquidAvatarAuth.clientId,
+            'redirect_uri': LiquidAvatarAuth.redirectURL
         }), {
             auth: {
                 username: LiquidAvatarAuth.clientId!,
