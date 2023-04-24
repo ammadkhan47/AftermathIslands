@@ -136,8 +136,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         nameInput = document.getElementById("playername") as HTMLInputElement;
 
         if (nameInput.value.length > 0) {
-            let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
-            await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
+
+            if (window.location.href.includes("testing")) {
+                let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
+                await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
+            }
 
             props.Launch();
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
