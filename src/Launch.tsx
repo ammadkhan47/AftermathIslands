@@ -244,7 +244,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function patchAccelbyteUser(accessToken: string, patchData: object) {
-        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/public/namespaces/${AccelbyteAuth.namespace}/users/me`,
+        let response = await axios.patch(`${AccelbyteAuth.baseURL}/iam/v3/public/namespaces/${AccelbyteAuth.namespace}/users/me`,
             patchData, {
                 headers: {
                     'Authorization': 'Bearer ' + accessToken
