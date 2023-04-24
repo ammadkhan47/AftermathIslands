@@ -136,8 +136,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         nameInput = document.getElementById("playername") as HTMLInputElement;
 
         if (nameInput.value.length > 0) {
-            let accelbyteUserId = sessionStorage.getItem('accelbyte_user_id')!;
-            await patchAccelbyteUser(accelbyteUserId, { 'displayName': nameInput.value});
+            let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
+            await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
 
             props.Launch();
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
@@ -159,20 +159,19 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             if (openIDToken) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
-                let accelbyteUserId = accelbyteAccessData['user_id'];
                 let accelbyteDisplayName = accelbyteAccessData['display_name']; // first time it's the uuid
 
-                let accelbyteUserData = await getAccelbyteUser(accelbyteUserId);
+                let accelbyteUserData = await getAccelbyteUser(accelbyteAccessToken);
                 await getGameCode(accelbyteAccessToken);
                 if (accelbyteUserData) {
                     let isExistingUser = !!accelbyteUserData['userName'];
                     if (!isExistingUser) {
                         // new user -> save display name into username
-                        sessionStorage.setItem('accelbyte_user_id', accelbyteUserId);
+                        sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
                         let patchData = {
-                            'userName': accelbyteDisplayName.slice(48)
+                            'userName': accelbyteDisplayName
                         };
-                        await patchAccelbyteUser(accelbyteUserId, patchData);
+                        await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
                         props.Launch();
                     }
@@ -233,24 +232,22 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         return response.status === 200 ? response.data : '';
     }
 
-    async function getAccelbyteUser(userId: string) {
-        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/admin/namespaces/${AccelbyteAuth.namespace}/users/${userId}`,
+    async function getAccelbyteUser(accessToken: string) {
+        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/public/me`,
             {
-                auth: {
-                    username: AccelbyteAuth.clientId!,
-                    password: ''
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
                 }
             });
 
         return response.status === 200 ? response.data : '';
     }
 
-    async function patchAccelbyteUser(userId: string, patchData: object) {
-        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/admin/namespaces/${AccelbyteAuth.namespace}/users/${userId}`,
+    async function patchAccelbyteUser(accessToken: string, patchData: object) {
+        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/public/namespaces/${AccelbyteAuth.namespace}/users/me`,
             patchData, {
-                auth: {
-                    username: AccelbyteAuth.clientId!,
-                    password: ''
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
                 }
             });
 
