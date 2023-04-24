@@ -233,7 +233,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function getAccelbyteUser(accessToken: string) {
-        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/public/me`,
+        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/public/users/me`,
             {
                 headers: {
                     'Authorization': 'Bearer ' + accessToken
