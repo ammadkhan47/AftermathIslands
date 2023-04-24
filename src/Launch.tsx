@@ -163,6 +163,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
                 let accelbyteDisplayName = accelbyteAccessData['display_name']; // first time it's the uuid
+                sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
 
                 let accelbyteUserData = await getAccelbyteUser(accelbyteAccessToken);
                 await getGameCode(accelbyteAccessToken);
@@ -170,7 +171,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     let isExistingUser = !!accelbyteUserData['userName'];
                     if (!isExistingUser) {
                         // new user -> save display name into username
-                        sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
                         let patchData = {
                             'userName': accelbyteDisplayName
                         };
