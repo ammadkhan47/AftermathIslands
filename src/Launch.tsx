@@ -176,7 +176,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        props.Launch();
+                        // props.Launch();
                     }
                 } else {
                     // todo throw some error
