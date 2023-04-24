@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Button } from 'semantic-ui-react';
+import {Button} from 'semantic-ui-react';
 
 import './Launch.css';
 import clientConfig from './client.json';
@@ -24,6 +24,7 @@ interface LaunchProps {
 class AccelbyteAuth {
     static baseURL?: string = process.env.REACT_APP_ACCELBYTE_API
     static clientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_CLIENT_ID
+    static namespace?: string = process.env.REACT_APP_ACCELBYTE_AUTH_NAMESPACE
     static platformId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_PLATFORM_ID
     static exchangeNamespace?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_NAMESPACE
     static exchangeClientId?: string = process.env.REACT_APP_ACCELBYTE_AUTH_EXCHANGE_CLIENT_ID
@@ -51,20 +52,20 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
         <div id="launchContainer">
             <div id="login-buttons-wrap">
-                <div id="login-left" style={{ zIndex: 20 }}>
+                <div id="login-left" style={{zIndex: 20}}>
                     <h2>Try it out with <br></br> limited functionality</h2>
                     <h1>{client.description}</h1>
-                    <Button size="massive" color="green" circular icon="play" onClick={playbtn}></Button>
+                    <Button size="massive" color="green" circular icon="play" onClick={playButton}></Button>
                     <p id="NameDescription"></p>
-                    <input type="text" placeholder="Enter Username" name="nameInput" id="playername" />
+                    <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
                 </div>
                 <div id="login-middle">
                     <h2>OR</h2>
                 </div>
                 <div id="login-right">
-                    <form autoComplete="off" action={LiquidAvatarAuth.baseURL+'/auth'} method="post">
+                    <form autoComplete="off" action={LiquidAvatarAuth.baseURL + '/auth'} method="post">
                         <h2>Login with your <br></br> Meta ParkPass ™</h2>
-                        <input required type="text" hidden name="client_id" value={LiquidAvatarAuth.clientId} />
+                        <input required type="text" hidden name="client_id" value={LiquidAvatarAuth.clientId}/>
                         <input required type="text" hidden name="response_type" value="code"/>
                         <input required type="text" hidden name="response_mode" value="query"/>
                         <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
@@ -72,7 +73,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         <input type="text" hidden name="code_challenge_method" value="S256"/>
                         <input required hidden type="text" name="scope" value="openid"/>
                         <Button type="submit" size="massive" color="blue" circular>
-                            <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png" />
+                            <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png"/>
                         </Button>
                     </form>
 
@@ -80,7 +81,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             </div>
 
             <img alt="Aftermathislands Logo" src="/aftermathislands.svg"
-                style={{ width: 100, position: 'absolute', bottom: 50, right: 10 }} />
+                 style={{width: 100, position: 'absolute', bottom: 50, right: 10}}/>
 
             <img alt="Aftermathislands Logo" src="/Navlogo.png" style={{
                 width: '370px',
@@ -90,7 +91,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 right: 0,
                 left: 0,
                 margin: 'auto',
-            }} />
+            }}/>
 
             <img className='navcontrols' alt="Navigation Controls" src="/Navcontrols.png" style={{
                 width: '400px',
@@ -100,7 +101,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 right: 0,
                 left: 0,
                 margin: 'auto',
-            }} />
+            }}/>
 
             <div><p style={{
                 fontSize: '10',
@@ -122,7 +123,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         const loginLeft = document.getElementById("login-left") as HTMLElement;
         const loginMiddle = document.getElementById("login-middle") as HTMLElement;
         const loginRight = document.getElementById("login-right") as HTMLElement;
-        if (!(window.location.href.includes("testing"))||(window.location.href.includes("code"))) {
+        if (!(window.location.href.includes("testing")) || (window.location.href.includes("code"))) {
             loginMiddle.style.display = "none";
             loginRight.style.display = "none";
         } else {
@@ -131,10 +132,12 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         }
     }
 
-    function playbtn() {
-        nameInput = document.getElementById("playername") as HTMLInputElement;
+    async function playButton() {
+        let nameInput = document.getElementById("playername") as HTMLInputElement;
 
         if (nameInput.value.length > 0) {
+            let accelbyteUserId = sessionStorage.getItem('accelbyte_user_id')!;
+            await patchAccelbyteUser(accelbyteUserId, { 'displayName': nameInput});
 
             props.Launch();
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
@@ -152,10 +155,32 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let openIDToken = await getOpenIDToken(authorizationCode);
             removeUrlParameter('code');
             removeUrlParameter('iss');
+            const loginLeft = document.getElementById("login-left") as HTMLElement;
+            loginLeft.style.display = 'none';
+
             if (openIDToken) {
-                let accelbyteAccessToken = await getAccelbyteAccessToken(openIDToken);
-                if (accelbyteAccessToken) {
-                    getGameCode(accelbyteAccessToken);
+                let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
+                let accelbyteAccessToken = accelbyteAccessData['access_token'];
+                let accelbyteUserId = accelbyteAccessData['user_id'];
+                let accelbyteDisplayName = accelbyteAccessData['display_name']; // first time it's the uuid
+
+                let accelbyteUserData = await getAccelbyteUser(accelbyteUserId);
+                await getGameCode(accelbyteAccessToken);
+                if (accelbyteUserData) {
+                    let isExistingUser = !!accelbyteUserData['userName'];
+                    if (!isExistingUser) {
+                        // new user -> save display name into username
+                        sessionStorage.setItem('accelbyte_user_id', accelbyteUserId);
+                        let patchData = {
+                            'userName': accelbyteDisplayName.slice(48)
+                        };
+                        await patchAccelbyteUser(accelbyteUserId, patchData);
+                        loginLeft.style.display = 'block';
+                    } else {
+                        props.Launch();
+                    }
+                } else {
+                    // todo throw some error
                 }
             }
         } else {
@@ -208,10 +233,31 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             }
         });
 
-        console.log(response.status);
-        console.log(response.data);
+        return response.status === 200 ? response.data : '';
+    }
 
-        return response.status === 200 ? response.data['access_token'] : '';
+    async function getAccelbyteUser(userId: string) {
+        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/admin/platforms/${AccelbyteAuth.namespace}/users/${userId}`,
+            {
+                auth: {
+                    username: AccelbyteAuth.clientId!,
+                    password: ''
+                }
+            });
+
+        return response.status === 200 ? response.data : '';
+    }
+
+    async function patchAccelbyteUser(userId: string, patchData: object) {
+        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/admin/platforms/${AccelbyteAuth.namespace}/users/${userId}`,
+            patchData, {
+                auth: {
+                    username: AccelbyteAuth.clientId!,
+                    password: ''
+                }
+            });
+
+        return response.status === 200 ? response.data : '';
     }
 
     async function getGameCode(accessToken: string) {
@@ -219,11 +265,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             queryString.stringify({
                 'client_id': AccelbyteAuth.exchangeClientId
             }), {
-            headers: {
-                'Authorization': 'Bearer ' + accessToken,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
 
         console.log(response.status);
         console.log(response.data);
@@ -240,11 +286,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             console.log(modelId);
             console.log('version after getting game code');
             console.log(version);
-           /* 
-           if (gameCode.length > 0) {
-                props.Launch();
-            }
-            */
         }
 
     }
@@ -256,10 +297,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         r.searchParams.delete(paramKey);
         const newUrl = r.href;
         console.log("r.href", newUrl);
-        window.history.pushState({ path: newUrl }, '', newUrl);
+        window.history.pushState({path: newUrl}, '', newUrl);
     }
-
-
 
 
 };
