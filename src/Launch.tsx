@@ -155,8 +155,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let openIDToken = await getOpenIDToken(authorizationCode);
             removeUrlParameter('code');
             removeUrlParameter('iss');
-            const loginLeft = document.getElementById("login-left") as HTMLElement;
-            loginLeft.style.display = 'none';
 
             if (openIDToken) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
@@ -175,7 +173,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                             'userName': accelbyteDisplayName.slice(48)
                         };
                         await patchAccelbyteUser(accelbyteUserId, patchData);
-                        loginLeft.style.display = 'block';
                     } else {
                         props.Launch();
                     }
