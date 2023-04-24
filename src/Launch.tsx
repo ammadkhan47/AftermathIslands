@@ -237,7 +237,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function getAccelbyteUser(userId: string) {
-        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/admin/platforms/${AccelbyteAuth.namespace}/users/${userId}`,
+        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/admin/namespaces/${AccelbyteAuth.namespace}/users/${userId}`,
             {
                 auth: {
                     username: AccelbyteAuth.clientId!,
@@ -249,7 +249,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function patchAccelbyteUser(userId: string, patchData: object) {
-        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/admin/platforms/${AccelbyteAuth.namespace}/users/${userId}`,
+        let response = await axios.post(`${AccelbyteAuth.baseURL}/iam/v3/admin/namespaces/${AccelbyteAuth.namespace}/users/${userId}`,
             patchData, {
                 auth: {
                     username: AccelbyteAuth.clientId!,
