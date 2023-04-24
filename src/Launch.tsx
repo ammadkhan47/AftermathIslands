@@ -150,6 +150,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         // if we have one, we proceed to log in with it
         if (authorizationCode) {
             let openIDToken = await getOpenIDToken(authorizationCode);
+            removeUrlParameter('code');
+            removeUrlParameter('iss');
             if (openIDToken) {
                 let accelbyteAccessToken = await getAccelbyteAccessToken(openIDToken);
                 if (accelbyteAccessToken) {
@@ -245,7 +247,15 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     }
 
-
+    function removeUrlParameter(paramKey: string) {
+        const url = window.location.href;
+        console.log("url", url);
+        let r = new URL(url);
+        r.searchParams.delete(paramKey);
+        const newUrl = r.href;
+        console.log("r.href", newUrl);
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    }
 
 
 
