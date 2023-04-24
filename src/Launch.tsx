@@ -133,11 +133,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function playButton() {
-        let nameInput = document.getElementById("playername") as HTMLInputElement;
+        nameInput = document.getElementById("playername") as HTMLInputElement;
 
         if (nameInput.value.length > 0) {
             let accelbyteUserId = sessionStorage.getItem('accelbyte_user_id')!;
-            await patchAccelbyteUser(accelbyteUserId, { 'displayName': nameInput});
+            await patchAccelbyteUser(accelbyteUserId, { 'displayName': nameInput.value});
 
             props.Launch();
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
