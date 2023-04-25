@@ -156,8 +156,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         // if we have one, we proceed to log in with it
         if (authorizationCode) {
             let openIDToken = await getOpenIDToken(authorizationCode);
-            removeUrlParameter('code');
-            removeUrlParameter('iss');
+            //removeUrlParameter('code');
+            //removeUrlParameter('iss');
 
             if (openIDToken) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
