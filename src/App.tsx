@@ -106,9 +106,9 @@ interface LoadingProps {
 
 const LoadingView: React.FC<LoadingProps> = (props: LoadingProps) => {
 
-  
 
-  
+
+
 
   /*
 
@@ -449,7 +449,10 @@ const App: React.FC = () => {
     audio.load();
 
     //set player name----------------------
-      setPlayerName((document.getElementById("playername") as HTMLInputElement).value);
+      let nameInputElement = document.getElementById("playername") as HTMLInputElement;
+      console.log('set player name here');
+      console.log(nameInputElement);
+      setPlayerName(nameInputElement.value);
 
     if (clientOptions.LaunchType !== 'local') {
       try {
@@ -511,7 +514,7 @@ const App: React.FC = () => {
     }
 
 
-    
+
 
     //send avatar url
     emitter.EmitUIInteraction(avatarUrl);
