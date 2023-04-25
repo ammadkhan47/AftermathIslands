@@ -162,7 +162,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             if (openIDToken) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
-                let accelbyteDisplayName = accelbyteAccessData['display_name']; // first time it's the uuid
+                let openIDUserId = accelbyteAccessData['platform_user_id'];
                 sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
 
                 let accelbyteUserData = await getAccelbyteUser(accelbyteAccessToken);
@@ -172,11 +172,13 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     if (!isExistingUser) {
                         // new user -> save display name into username
                         let patchData = {
-                            'userName': accelbyteDisplayName
+                            'userName': openIDUserId
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        // props.Launch();
+                        props.Launch();
+                        var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+                        foobarElement.style.background = '#0f101f';
                     }
                 } else {
                     // todo throw some error
