@@ -344,8 +344,8 @@ if (query['collaboration'] && query['collaboration'] === 'true') {
 
 clientOptions.Endpoint = (query['endpoint'] as string) ?? client.endpoint;
 clientOptions.ProjectId = (query['projectId'] as string) ?? client.projectId;
-clientOptions.ModelId = "13a1eb88-4d53-4eca-875e-20cae0de4acb";
-clientOptions.Version = "f480p0";
+clientOptions.ModelId = (query['modelId'] as string) ?? client.modelId;
+clientOptions.Version = (query['version'] as string) ?? client.version;
 clientOptions.EnvironmentId = (query['environmentId'] as string) ?? client.environmentId;
 clientOptions.Resolution = (query['resolution'] as Resolution) ?? client.resolution;
 clientOptions.Resolution = clientOptions.Resolution ?? Resolution.fhd;
