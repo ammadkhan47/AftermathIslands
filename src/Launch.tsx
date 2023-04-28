@@ -176,9 +176,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        props.Launch();
-                        var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
-                        foobarElement.style.background = '#0f101f';
+                        setTimeout(function () {
+                            props.Launch();
+                            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+                            foobarElement.style.background = '#0f101f';
+                        }, 500);
                     }
                 } else {
                     // todo throw some error
