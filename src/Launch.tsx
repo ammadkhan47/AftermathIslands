@@ -135,15 +135,17 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     async function playButton() {
         nameInput = document.getElementById("playername") as HTMLInputElement;
 
-        // if (nameInput.value.length > 0) {
+        if (nameInput.value.length > 0) {
 
             if (window.location.href.includes("testing")) {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
                 await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
-            } else {
-
             }
-        // }
+
+            props.Launch();
+            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+            foobarElement.style.background = '#0f101f';
+        }
     }
 
     async function setupLoginWithOpenIDConnect() {
