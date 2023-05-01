@@ -53,7 +53,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         <div id="launchContainer">
             <div id="login-buttons-wrap">
                 <div id="login-left" style={{zIndex: 20}}>
-                    <h2>Try it out with <br></br> limited functionality</h2>
+                    <h2 id="login-heading">Try it out with <br></br> limited functionality</h2>
                     <h1>{client.description}</h1>
                     <Button size="massive" color="green" circular icon="play" onClick={playButton}></Button>
                     <p id="NameDescription"></p>
@@ -158,6 +158,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let openIDToken = await getOpenIDToken(authorizationCode);
             removeUrlParameter('code');
             removeUrlParameter('iss');
+            const loginheading = document.getElementById("login-heading") as HTMLHeadingElement;
+            loginheading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
 
             if (openIDToken) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
