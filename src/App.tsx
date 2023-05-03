@@ -41,14 +41,14 @@ import { Button, Icon } from 'semantic-ui-react';
 import useAsyncEffect from 'use-async-effect';
 import './App.css';
 import clientConfig from './client.json';
+import clientTestingConfig from './client_testing.json';
 import { LaunchView } from './Launch';
 import logger from './Log';
 import { isMobile, browserName } from "react-device-detect";
 
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
-
-const client: ClientJson = clientConfig as ClientJson;
+const client: ClientJson = window.location.href.includes("testing") ? clientTestingConfig : clientConfig as ClientJson;
 
 class ClientJson {
   environmentId?: string;
@@ -344,8 +344,8 @@ if (query['collaboration'] && query['collaboration'] === 'true') {
 
 clientOptions.Endpoint = (query['endpoint'] as string) ?? client.endpoint;
 clientOptions.ProjectId = (query['projectId'] as string) ?? client.projectId;
-clientOptions.ModelId = (query['modelId'] as string) ?? client.modelId;
-clientOptions.Version = (query['version'] as string) ?? client.version;
+clientOptions.ModelId = client.modelId;
+clientOptions.Version = client.version;
 clientOptions.EnvironmentId = (query['environmentId'] as string) ?? client.environmentId;
 clientOptions.Resolution = (query['resolution'] as Resolution) ?? client.resolution;
 clientOptions.Resolution = clientOptions.Resolution ?? Resolution.fhd;
