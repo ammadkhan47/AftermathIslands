@@ -340,8 +340,6 @@ if (query['collaboration'] && query['collaboration'] === 'true') {
 }
 
 
-
-
 clientOptions.Endpoint = (query['endpoint'] as string) ?? client.endpoint;
 clientOptions.ProjectId = (query['projectId'] as string) ?? client.projectId;
 clientOptions.ModelId = client.modelId;
