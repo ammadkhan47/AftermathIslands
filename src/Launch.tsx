@@ -71,7 +71,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
                         <input type="text" hidden name="code_challenge" value={codeChallenge}/>
                         <input type="text" hidden name="code_challenge_method" value="S256"/>
-                        <input required hidden type="text" name="scope" value="openid"/>
+                        <input required hidden type="text" name="scope" value="openid profile"/>
                         <Button type="submit" size="massive" color="blue" circular>
                             <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png"/>
                         </Button>
