@@ -66,7 +66,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     <form autoComplete="off" action={LiquidAvatarAuth.baseURL + '/auth'} method="post">
                         <h2>Login with your <br></br> Meta ParkPass ™</h2>
                         <input required type="text" hidden name="client_id" value={LiquidAvatarAuth.clientId}/>
-                        <input required type="text" hidden name="response_type" value="id_token"/>
+                        <input required type="text" hidden name="response_type" value="code"/>
                         <input required type="text" hidden name="response_mode" value="query"/>
                         <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
                         <input type="text" hidden name="code_challenge" value={codeChallenge}/>
