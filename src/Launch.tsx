@@ -233,7 +233,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         let response = await axios.post(`${LiquidAvatarAuth.baseURL}/me`, queryString.stringify({
         }), {
             headers: {
-                'Authorization': accessToken,
+                'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
