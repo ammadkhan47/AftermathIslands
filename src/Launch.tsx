@@ -182,11 +182,13 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        // setTimeout(function () {
-                        //     props.Launch();
-                        //     var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
-                        //     foobarElement.style.background = '#0f101f';
-                        // }, 500);
+                        const loginContainer = document.getElementById("login-buttons-wrap") as HTMLElement;
+                        loginContainer.style.display = "none";
+                        setTimeout(function () {
+                            props.Launch();
+                            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+                            foobarElement.style.background = '#0f101f';
+                        }, 3000);
                     }
                 } else {
                     // todo throw some error
