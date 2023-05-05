@@ -155,14 +155,16 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
         // if we have one, we proceed to log in with it
         if (authorizationCode) {
-            let openIDToken = await getOpenIDToken(authorizationCode);
+            let oidcResult = await getOpenIDToken(authorizationCode);
+            let oidcIDToken = oidcResult['id_token'];
+            let oidcAccessToken = oidcResult['access_token'];
             removeUrlParameter('code');
             removeUrlParameter('iss');
             const loginheading = document.getElementById("login-heading") as HTMLHeadingElement;
             loginheading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
 
-            if (openIDToken) {
-                let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
+            if (oidcResult) {
+                let accelbyteAccessData = await getAccelbyteAccessToken(oidcIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
                 let openIDUserId = accelbyteAccessData['platform_user_id'];
                 sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
@@ -172,9 +174,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 if (accelbyteUserData) {
                     let isExistingUser = !!accelbyteUserData['userName'];
                     if (!isExistingUser) {
-                        // new user -> save display name into username
+                        // new user -> save uuid and birthdate
+                        let oidcUserData = await getOpenIDUserData(oidcAccessToken);
                         let patchData = {
-                            'userName': openIDUserId
+                            'userName': openIDUserId,
+                            'dateOfBirth': oidcUserData['birthdate'] || ''
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
@@ -221,7 +225,22 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         console.log(response.status);
         console.log(response.data);
 
-        return response.status === 200 ? response.data['id_token'] : '';
+        return response.status === 200 ? response.data : '';
+    }
+
+
+    async function getOpenIDUserData(accessToken: string) {
+        let response = await axios.post(`${LiquidAvatarAuth.baseURL}/me`, queryString.stringify({
+        }), {
+            headers: {
+                'Authorization': accessToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+        console.log(response.status);
+        console.log(response.data);
+
+        return response.status === 200 ? response.data : '';
     }
 
     async function getAccelbyteAccessToken(openIDToken: string) {
