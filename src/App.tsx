@@ -373,9 +373,9 @@ const App: React.FC = () => {
     const streamerOptions = DefaultStreamerOptions;
 
     useAsyncEffect(async () => {
-        console.log('async effect is used')
+        console.log('async effect is used');
         await setupPlatform();
-    });
+    }, [clientOptions]);
 
     async function setupPlatform() {
         if (clientOptions.ProjectId) {
