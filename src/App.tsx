@@ -372,9 +372,9 @@ const App: React.FC = () => {
     const [launchRequestError, setLaunchRequestError] = useState<Error>();
     const streamerOptions = DefaultStreamerOptions;
 
-    useAsyncEffect(async () => {
+    useEffect(() => {
         console.log('async effect is used');
-        await setupPlatform();
+        setupPlatform();
     }, [clientOptions]);
 
     async function setupPlatform() {
