@@ -38,7 +38,6 @@ import * as qs from 'query-string';
 import React, {useEffect, useState, useRef} from 'react';
 import {FullScreen, useFullScreenHandle} from 'react-full-screen';
 import {Button, Icon} from 'semantic-ui-react';
-import useAsyncEffect from 'use-async-effect';
 import './App.css';
 import clientConfig from './client.json';
 import clientTestingConfig from './client_testing.json';
@@ -373,11 +372,11 @@ const App: React.FC = () => {
     const streamerOptions = DefaultStreamerOptions;
 
     useEffect(() => {
-        console.log('async effect is used');
         setupPlatform();
-    }, [clientOptions]);
+    });
 
     async function setupPlatform() {
+        console.log('setupPlatform');
         if (clientOptions.ProjectId) {
             logger.info('Initializing available models: ' + clientOptions.ProjectId);
             try {
@@ -388,28 +387,6 @@ const App: React.FC = () => {
                 streamerOptions.forceRelay = clientOptions.ForceRelay;
                 const models = await platform.getModels();
                 setAvailableModels(models);
-                console.log('availableModels');
-                console.log(availableModels);
-                if (availableModels?.length) {
-                    const selectedModels = availableModels.filter(function (model: ModelDefinition): boolean {
-                        if (clientOptions.ModelId === model.id) {
-                            // If there is a version specified and we encounter it
-                            if (clientOptions.Version && clientOptions.Version === model.version) {
-                                return true;
-                            }
-                            // If there is no version specified and we find the primary version
-                            if (!clientOptions.Version && model.active) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    });
-                    if (selectedModels?.length) {
-                        setModelDefinition(selectedModels[0]);
-                    } else {
-                        setModelDefinitionUnavailable(true);
-                    }
-                }
                 logger.debug('Available models', models);
             } catch (err) {
                 logger.error(err);
@@ -419,7 +396,24 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (availableModels?.length) {
-
+            const selectedModels = availableModels.filter(function (model: ModelDefinition): boolean {
+                if (clientOptions.ModelId === model.id) {
+                    // If there is a version specified and we encounter it
+                    if (clientOptions.Version && clientOptions.Version === model.version) {
+                        return true;
+                    }
+                    // If there is no version specified and we find the primary version
+                    if (!clientOptions.Version && model.active) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            if (selectedModels?.length) {
+                setModelDefinition(selectedModels[0]);
+            } else {
+                setModelDefinitionUnavailable(true);
+            }
         }
     }, [availableModels]);
 
