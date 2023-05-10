@@ -456,17 +456,16 @@ const App: React.FC = () => {
             console.log("we're testing")
         }
 
-        console.log('clientOptions');
-        console.log(clientOptions);
-        console.log('platform');
-        console.log(platform);
-        console.log('modelDefinition');
-        console.log(modelDefinition);
-
         if (clientOptions.LaunchType !== 'local') {
             try {
                 await setupPlatform();
                 setTimeout(function () {
+                    console.log('clientOptions');
+                    console.log(clientOptions);
+                    console.log('platform');
+                    console.log(platform);
+                    console.log('modelDefinition');
+                    console.log(modelDefinition);
                      queueLaunchRequest();
                 }, 300);
 
