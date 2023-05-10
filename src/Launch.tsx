@@ -145,6 +145,10 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             props.Launch();
             var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
+        } else {
+            props.Launch();
+            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+            foobarElement.style.background = '#0f101f';
         }
     }
 
@@ -182,13 +186,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        // const loginContainer = document.getElementById("login-buttons-wrap") as HTMLElement;
-                        // loginContainer.style.display = "none";
-                        // setTimeout(function () {
-                        //     props.Launch();
-                        //     var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
-                        //     foobarElement.style.background = '#0f101f';
-                        // }, 3000);
+                        await playButton();
                     }
                 } else {
                     // todo throw some error
