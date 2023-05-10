@@ -145,10 +145,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             props.Launch();
             let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
-        } else {
-            props.Launch();
-            let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
-            foobarElement.style.background = '#0f101f';
         }
     }
 
@@ -186,8 +182,10 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        console.log('play button');
-                        await playButton();
+                        console.log('existing user logins');
+                        props.Launch();
+                        let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+                        foobarElement.style.background = '#0f101f';
                     }
                 } else {
                     // todo throw some error
