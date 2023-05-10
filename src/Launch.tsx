@@ -186,6 +186,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
+                        console.log('play button');
                         await playButton();
                     }
                 } else {
