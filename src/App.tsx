@@ -466,7 +466,10 @@ const App: React.FC = () => {
         if (clientOptions.LaunchType !== 'local') {
             try {
                 await setupPlatform();
-                await queueLaunchRequest();
+                setTimeout(function () {
+                     queueLaunchRequest();
+                }, 300);
+
             } catch (err) {
                 setLaunchRequestError(err as any);
             }
