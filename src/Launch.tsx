@@ -143,11 +143,11 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             }
 
             props.Launch();
-            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+            let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
         } else {
             props.Launch();
-            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+            let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
         }
     }
