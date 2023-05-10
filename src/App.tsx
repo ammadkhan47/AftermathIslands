@@ -373,7 +373,8 @@ const App: React.FC = () => {
 
     useEffect(() => {
         setupPlatform();
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     async function setupPlatform() {
         console.log('setupPlatform');
@@ -465,7 +466,7 @@ const App: React.FC = () => {
                     console.log(platform);
                     console.log('modelDefinition');
                     console.log(modelDefinition);
-                     queueLaunchRequest();
+                    queueLaunchRequest();
                 }, 300);
 
             } catch (err) {
