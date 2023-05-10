@@ -301,14 +301,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let data = response.data;
             let gameCode = data['code'];
             props.GameCode(gameCode);
-
-            let queryParameters = new URLSearchParams(window.location.search)
-            let modelId = queryParameters.get("modelId")
-            let version = queryParameters.get("version")
-            console.log('modelId after getting game code');
-            console.log(modelId);
-            console.log('version after getting game code');
-            console.log(version);
         }
 
     }
