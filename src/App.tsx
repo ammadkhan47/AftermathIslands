@@ -429,7 +429,9 @@ const App: React.FC = () => {
             if (selectedModels?.length) {
                 console.log('set model definition');
                 console.log(selectedModels[0]);
-                setModelDefinition(selectedModels[0]);
+                let modelDef = JSON.parse(JSON.stringify(selectedModels[0]));
+                console.log(modelDef);
+                setModelDefinition(modelDef);
             } else {
                 console.log('set model unavailable');
                 setModelDefinitionUnavailable(true);
