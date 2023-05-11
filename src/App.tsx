@@ -424,9 +424,14 @@ const App: React.FC = () => {
                 }
                 return false;
             });
+            console.log('selected Models');
+            console.log(selectedModels);
             if (selectedModels?.length) {
+                console.log('set model definition');
+                console.log(selectedModels[0]);
                 setModelDefinition(selectedModels[0]);
             } else {
+                console.log('set model unavailable');
                 setModelDefinitionUnavailable(true);
             }
         }
