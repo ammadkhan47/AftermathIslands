@@ -399,6 +399,8 @@ const App: React.FC = () => {
                 streamerOptions.iceServers = platform.agent.serviceCredentials.iceServers as RTCIceServer[];
                 streamerOptions.forceRelay = clientOptions.ForceRelay;
                 const models = await platform.getModels();
+                console.log('available models');
+                console.log(models);
                 setAvailableModels(models);
                 logger.debug('Available models', models);
             } catch (err) {
@@ -460,15 +462,22 @@ const App: React.FC = () => {
         if (clientOptions.LaunchType !== 'local') {
             try {
                 await setupPlatform();
-                setTimeout(function () {
-                    console.log('clientOptions');
-                    console.log(clientOptions);
+
+                let interval = setInterval(launchPlatform, 300); // 2000 ms = start after 2sec
+                // @ts-ignore
+                function launchPlatform() {
                     console.log('platform');
                     console.log(platform);
+                    console.log('availableModels');
+                    console.log(availableModels);
                     console.log('modelDefinition');
                     console.log(modelDefinition);
-                    queueLaunchRequest();
-                }, 300);
+                    if (availableModels?.length) {
+                        console.log('queue launch request');
+                        queueLaunchRequest();
+                        clearInterval(interval);
+                    }
+                }
 
             } catch (err) {
                 setLaunchRequestError(err as any);
