@@ -370,6 +370,18 @@ const App: React.FC = () => {
     const [availableModels, setAvailableModels] = useState<ModelDefinition[]>();
     const [launchRequestError, setLaunchRequestError] = useState<Error>();
     const streamerOptions = DefaultStreamerOptions;
+    const launchRequestOptions: LaunchRequestOptions = {
+        regionOverride: query['regionOverride'] as string,
+        virtualizationProviderOverride: query['virtualizationProviderOverride'] as string
+    };
+    const [status, launchRequest, queueLaunchRequest] = useLaunchRequest(platform, modelDefinition, launchRequestOptions);
+    const [streamerStatus, emitter, videoStream, audioStream, messageSubject] = useStreamer(
+        platform,
+        launchRequest,
+        streamerOptions
+    );
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setupPlatform();
@@ -418,18 +430,7 @@ const App: React.FC = () => {
         }
     }, [availableModels]);
 
-    const launchRequestOptions: LaunchRequestOptions = {
-        regionOverride: query['regionOverride'] as string,
-        virtualizationProviderOverride: query['virtualizationProviderOverride'] as string
-    };
-    const [status, launchRequest, queueLaunchRequest] = useLaunchRequest(platform, modelDefinition, launchRequestOptions);
-    const [streamerStatus, emitter, videoStream, audioStream, messageSubject] = useStreamer(
-        platform,
-        launchRequest,
-        streamerOptions
-    );
 
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (streamerStatus === StreamerStatus.Failed) {
