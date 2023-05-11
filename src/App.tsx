@@ -17,7 +17,6 @@ import {
     LaunchStatusType,
     ModelDefinition,
     PlatformNext,
-    UndefinedModelDefinition,
     InputEmitter,
     DefaultStreamerOptions,
     StreamerStatus,
@@ -360,13 +359,19 @@ clientOptions.UseNativeTouchEvents =
 const platform = new PlatformNext();
 platform.initialize({endpoint: clientOptions.Endpoint || 'https://api.pureweb.io'});
 
+const defaultModelDefinition = new ModelDefinition();
+defaultModelDefinition.id = clientOptions.ModelId!;
+defaultModelDefinition.active = true;
+defaultModelDefinition.version = clientOptions.Version!;
+defaultModelDefinition.projectId = clientOptions.ProjectId!;
+
 const App: React.FC = () => {
     //const ab=document.getElementById('videoOfBackground') as HTMLVideoElement;
     const [playername, setPlayerName] = useState("");
     const [gameToken, setGameToken] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [modelDefinitionUnavailable, setModelDefinitionUnavailable] = useState(false);
-    const [modelDefinition, setModelDefinition] = useState(new UndefinedModelDefinition());
+    const [modelDefinition, setModelDefinition] = useState(defaultModelDefinition);
     const [availableModels, setAvailableModels] = useState<ModelDefinition[]>();
     const [launchRequestError, setLaunchRequestError] = useState<Error>();
     const streamerOptions = DefaultStreamerOptions;
