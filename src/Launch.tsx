@@ -134,7 +134,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
         if (nameInput.value.length > 0) {
 
-            if (window.location.href.includes("testing")) {
+            // patch the username for users coming from liquid avatar
+            if (window.location.href.includes("testing") && localStorage.getItem('is_guest_login') !== 'true') {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
                 await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
             }
@@ -146,6 +147,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function setupLoginWithOpenIDConnect() {
+        // by default we set guest login
+        sessionStorage.setItem('is_guest_login', 'true');
         // check if we have an OpenID Connect authorization code in the URL
         let queryParameters = new URLSearchParams(window.location.search);
         let authorizationCode = queryParameters.get("code");
@@ -157,6 +160,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let oidcAccessToken = oidcResult['access_token'];
             removeUrlParameter('code');
             removeUrlParameter('iss');
+            sessionStorage.setItem('is_guest_login', 'false');
             const loginheading = document.getElementById("login-heading") as HTMLHeadingElement;
             loginheading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
 
@@ -193,6 +197,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let challenge = pkceChallenge();
             sessionStorage.setItem('code_challenge', challenge.code_challenge);
             sessionStorage.setItem('code_verifier', challenge.code_verifier);
+            sessionStorage.setItem('is_guest_login', 'true');
         }
 
         let codeChallenge = sessionStorage.getItem('code_challenge');
