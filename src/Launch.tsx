@@ -135,7 +135,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         if (nameInput.value.length > 0) {
 
             // patch the username for users coming from liquid avatar
-            if (window.location.href.includes("testing") && localStorage.getItem('is_guest_login') !== 'true') {
+            if (window.location.href.includes("testing") && sessionStorage.getItem('is_guest_login') !== 'true') {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
                 await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
             }
