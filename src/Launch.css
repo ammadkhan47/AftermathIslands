@@ -16,7 +16,7 @@
 
 #login-buttons-wrap {
   width: 100%;
-  max-width: 510px;
+  max-width: 400px;
   color: white;
   background: rgba(0, 0, 0, 0.5);
   margin: 5px 5px 20px 5px;
@@ -26,7 +26,6 @@
 
 #login-left {
   width: 100%;
-  max-width: 260px;
   float: left;
 }
 
@@ -76,6 +75,13 @@
   width: 130px;
   height: 36px;
   float: left;
+}
+
+#username-error {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #cc0000;
 }
 
 @media screen and (max-width: 600px) {

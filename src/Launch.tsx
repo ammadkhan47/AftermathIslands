@@ -57,6 +57,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     <h1>{client.description}</h1>
                     <Button size="massive" color="green" circular icon="play" onClick={playButton}></Button>
                     <p id="NameDescription"></p>
+                    <p id="username-error"></p>
                     <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
                 </div>
                 <div id="login-middle">
