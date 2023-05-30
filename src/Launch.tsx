@@ -149,6 +149,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     async function setupLoginWithOpenIDConnect() {
         // by default we set guest login
         sessionStorage.setItem('is_guest_login', 'true');
+        props.GameCode('guest');
         // check if we have an OpenID Connect authorization code in the URL
         let queryParameters = new URLSearchParams(window.location.search);
         let authorizationCode = queryParameters.get("code");
