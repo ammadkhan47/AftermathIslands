@@ -521,7 +521,9 @@ const App: React.FC = () => {
         if (playername.length > 0) {
             emitter.EmitUIInteraction("playername=" + playername);
             logger.info("playername===" + playername);
-
+        }
+        else{
+            logger.info("playername empty" );
         }
 
 
