@@ -461,15 +461,15 @@ const App: React.FC = () => {
         setLoading(true);
         audio.load();
 
-        if (!window.location.href.includes("testing")) {
+        //if (!window.location.href.includes("testing")) {
             //set player name----------------------
             let nameInputElement = document.getElementById("playername") as HTMLInputElement;
             console.log('set player name here');
             console.log(nameInputElement);
             setPlayerName(nameInputElement.value);
-        } else {
-            console.log("we're testing")
-        }
+        //} else {
+        //    console.log("we're testing")
+        //}
 
         if (clientOptions.LaunchType !== 'local') {
             try {
