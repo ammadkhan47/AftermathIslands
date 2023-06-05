@@ -461,15 +461,16 @@ const App: React.FC = () => {
         setLoading(true);
         audio.load();
 
-        //if (!window.location.href.includes("testing")) {
+        // send player name to the game - when not testing (old login) OR when testing, but it is guest login
+        if (!window.location.href.includes("testing") || sessionStorage.getItem('is_guest_login') === 'true') {
             //set player name----------------------
             let nameInputElement = document.getElementById("playername") as HTMLInputElement;
             console.log('set player name here');
             console.log(nameInputElement);
             setPlayerName(nameInputElement.value);
-        //} else {
-        //    console.log("we're testing")
-        //}
+        } else {
+           console.log("player name is loaded form AB")
+        }
 
         if (clientOptions.LaunchType !== 'local') {
             try {
