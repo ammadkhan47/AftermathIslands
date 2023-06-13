@@ -46,7 +46,7 @@ import {isMobile, browserName} from "react-device-detect";
 
 //import AftermathIslandsVideo from './video/AftermathIslandsVideo.mp4';
 
-const client: ClientJson = window.location.href.includes("testing") ? clientTestingConfig : clientConfig as ClientJson;
+const client: ClientJson = /*window.location.href.includes("testing") ? clientTestingConfig : */ clientConfig as ClientJson;
 
 class ClientJson {
     environmentId?: string;
@@ -461,16 +461,15 @@ const App: React.FC = () => {
         setLoading(true);
         audio.load();
 
-        // send player name to the game - when not testing (old login) OR when testing, but it is guest login
-        if (!window.location.href.includes("testing") || sessionStorage.getItem('is_guest_login') === 'true') {
+        //if (!window.location.href.includes("testing")) {
             //set player name----------------------
-            let nameInputElement = document.getElementById("playername") as HTMLInputElement;
-            console.log('set player name here');
-            console.log(nameInputElement);
-            setPlayerName(nameInputElement.value);
-        } else {
-           console.log("player name is loaded form AB")
-        }
+          //  let nameInputElement = document.getElementById("playername") as HTMLInputElement;
+          //  console.log('set player name here');
+          //  console.log(nameInputElement);
+          //  setPlayerName(nameInputElement.value);
+        //} else {
+        //    console.log("we're testing")
+        //}
 
         if (clientOptions.LaunchType !== 'local') {
             try {
