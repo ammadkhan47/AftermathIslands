@@ -57,6 +57,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                     <h1>{client.description}</h1>
                     <Button size="massive" color="green" circular icon="play" onClick={playButton}></Button>
                     <p id="NameDescription"></p>
+                    <p id="username-error"></p>
                     <input type="text" placeholder="Enter Username" name="nameInput" id="playername"/>
                 </div>
                 <div id="login-middle">
@@ -71,7 +72,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         <input required type="text" hidden name="redirect_uri" value={LiquidAvatarAuth.redirectURL}/>
                         <input type="text" hidden name="code_challenge" value={codeChallenge}/>
                         <input type="text" hidden name="code_challenge_method" value="S256"/>
-                        <input required hidden type="text" name="scope" value="openid"/>
+                        <input required hidden type="text" name="scope" value="openid profile"/>
                         <Button type="submit" size="massive" color="blue" circular>
                             <img alt="Liquid Avatar Logo " src="/Liquid-Avatar-Logo-thumb-v1.png"/>
                         </Button>
@@ -120,16 +121,12 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     );
 
     function unhideLogin() {
-        const loginLeft = document.getElementById("login-left") as HTMLElement;
         const loginMiddle = document.getElementById("login-middle") as HTMLElement;
         const loginRight = document.getElementById("login-right") as HTMLElement;
-        ////if (!(window.location.href.includes("testing")) || (window.location.href.includes("code"))) {
-        ////    loginMiddle.style.display = "none";
-        ////    loginRight.style.display = "none";
-        ////} else {
-            loginLeft.style.display = "none";
+        if (!(window.location.href.includes("testing")) || (window.location.href.includes("code"))) {
             loginMiddle.style.display = "none";
-        ////}
+            loginRight.style.display = "none";
+        }
     }
 
     async function playButton() {
@@ -137,33 +134,39 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
         if (nameInput.value.length > 0) {
 
-            //if (window.location.href.includes("testing")) {
+            // patch the username for users coming from liquid avatar
+            if (window.location.href.includes("testing") && sessionStorage.getItem('is_guest_login') !== 'true') {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
                 await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
-            //}
+            }
 
             props.Launch();
-            var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+            let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
             foobarElement.style.background = '#0f101f';
         }
     }
 
     async function setupLoginWithOpenIDConnect() {
+        // by default we set guest login
+        sessionStorage.setItem('is_guest_login', 'true');
+        props.GameCode('guest');
         // check if we have an OpenID Connect authorization code in the URL
         let queryParameters = new URLSearchParams(window.location.search);
         let authorizationCode = queryParameters.get("code");
 
         // if we have one, we proceed to log in with it
         if (authorizationCode) {
-            let openIDToken = await getOpenIDToken(authorizationCode);
+            let oidcResult = await getOpenIDToken(authorizationCode);
+            let oidcIDToken = oidcResult['id_token'];
+            let oidcAccessToken = oidcResult['access_token'];
             removeUrlParameter('code');
             removeUrlParameter('iss');
-            
+            sessionStorage.setItem('is_guest_login', 'false');
             const loginheading = document.getElementById("login-heading") as HTMLHeadingElement;
             loginheading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
 
-            if (openIDToken) {
-                let accelbyteAccessData = await getAccelbyteAccessToken(openIDToken);
+            if (oidcResult) {
+                let accelbyteAccessData = await getAccelbyteAccessToken(oidcIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
                 let openIDUserId = accelbyteAccessData['platform_user_id'];
                 sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
@@ -173,17 +176,18 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 if (accelbyteUserData) {
                     let isExistingUser = !!accelbyteUserData['userName'];
                     if (!isExistingUser) {
-                        // new user -> save display name into username
+                        // new user -> save uuid and birthdate
+                        let oidcUserData = await getOpenIDUserData(oidcAccessToken);
                         let patchData = {
-                            'userName': openIDUserId
+                            'userName': openIDUserId,
+                            'dateOfBirth': oidcUserData['birthdate'] || ''
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        // setTimeout(function () {
-                        //     props.Launch();
-                        //     var foobarElement = document.getElementById('mybody') as HTMLBodyElement;
-                        //     foobarElement.style.background = '#0f101f';
-                        // }, 500);
+                        console.log('existing user logins');
+                        props.Launch();
+                        let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
+                        foobarElement.style.background = '#0f101f';
                     }
                 } else {
                     // todo throw some error
@@ -194,6 +198,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let challenge = pkceChallenge();
             sessionStorage.setItem('code_challenge', challenge.code_challenge);
             sessionStorage.setItem('code_verifier', challenge.code_verifier);
+            sessionStorage.setItem('is_guest_login', 'true');
         }
 
         let codeChallenge = sessionStorage.getItem('code_challenge');
@@ -222,7 +227,22 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         console.log(response.status);
         console.log(response.data);
 
-        return response.status === 200 ? response.data['id_token'] : '';
+        return response.status === 200 ? response.data : '';
+    }
+
+
+    async function getOpenIDUserData(accessToken: string) {
+        let response = await axios.post(`${LiquidAvatarAuth.baseURL}/me`, queryString.stringify({
+        }), {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+        console.log(response.status);
+        console.log(response.data);
+
+        return response.status === 200 ? response.data : '';
     }
 
     async function getAccelbyteAccessToken(openIDToken: string) {
@@ -282,14 +302,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             let data = response.data;
             let gameCode = data['code'];
             props.GameCode(gameCode);
-
-            let queryParameters = new URLSearchParams(window.location.search)
-            let modelId = queryParameters.get("modelId")
-            let version = queryParameters.get("version")
-            console.log('modelId after getting game code');
-            console.log(modelId);
-            console.log('version after getting game code');
-            console.log(version);
         }
 
     }
