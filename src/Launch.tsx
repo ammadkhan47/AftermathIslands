@@ -123,7 +123,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     function unhideLogin() {
         const loginMiddle = document.getElementById("login-middle") as HTMLElement;
         const loginRight = document.getElementById("login-right") as HTMLElement;
-        if (!(window.location.href.includes("testing")) || (window.location.href.includes("code"))) {
+        if ((window.location.href.includes("code"))) {
             loginMiddle.style.display = "none";
             loginRight.style.display = "none";
         }
@@ -135,7 +135,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
         if (nameInput.value.length > 0) {
 
             // patch the username for users coming from liquid avatar
-            if (window.location.href.includes("testing") && sessionStorage.getItem('is_guest_login') !== 'true') {
+            if (sessionStorage.getItem('is_guest_login') !== 'true') {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
                 await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
             }
