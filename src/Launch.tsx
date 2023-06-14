@@ -138,7 +138,20 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             // patch the username for users coming from liquid avatar
             if (sessionStorage.getItem('is_guest_login') !== 'true') {
                 let accelbyteAccessToken = sessionStorage.getItem('accelbyte_access_token')!;
-                await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': nameInput.value});
+
+                let username = nameInput.value;
+
+                let existingUsernames = await getAccelbyteUsernames(accelbyteAccessToken, username);
+                console.log(existingUsernames);
+                if (existingUsernames.data.length) {
+                    let nameInputError = document.getElementById("username-error") as HTMLHeadingElement;
+                    nameInputError.textContent = "Username already exists!";
+                } else {
+                    await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': username});
+                }
+
+            } else {
+                nameInput.value = nameInput.value + '-guest';
             }
 
             props.Launch();
@@ -267,6 +280,17 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     async function getAccelbyteUser(accessToken: string) {
         let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/public/users/me`,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            });
+
+        return response.status === 200 ? response.data : '';
+    }
+
+    async function getAccelbyteUsernames(accessToken: string, query: string) {
+        let response = await axios.get(`${AccelbyteAuth.baseURL}/iam/v3/public/namespaces/${AccelbyteAuth.namespace}/users?query=${query}`,
             {
                 headers: {
                     'Authorization': 'Bearer ' + accessToken
