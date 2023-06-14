@@ -95,6 +95,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
             }}/>
 
             <img className='navcontrols' alt="Navigation Controls" src="/Navcontrols.png" style={{
+                display: 'none',
                 width: '400px',
                 height: '189px',
                 position: 'absolute',
