@@ -143,13 +143,12 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
                 let existingUsernames = await getAccelbyteUsernames(accelbyteAccessToken, username);
                 console.log(existingUsernames);
-                if (existingUsernames.data.length) {
+                if (existingUsernames.data.length && existingUsernames.data[0]['displayName'] === username) {
                     let nameInputError = document.getElementById("username-error") as HTMLHeadingElement;
                     nameInputError.textContent = "Username already exists!";
-                } else {
-                    await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': username});
+                    return;
                 }
-
+                await patchAccelbyteUser(accelbyteAccessToken, { 'displayName': username});
             } else {
                 nameInput.value = nameInput.value + '-guest';
             }
