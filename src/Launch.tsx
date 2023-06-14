@@ -142,6 +142,7 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 let username = nameInput.value;
 
                 let existingUsernames = await getAccelbyteUsernames(accelbyteAccessToken, username);
+                console.log('existingUsernames');
                 console.log(existingUsernames);
                 if (existingUsernames.data.length && existingUsernames.data[0]['displayName'] === username) {
                     let nameInputError = document.getElementById("username-error") as HTMLHeadingElement;
