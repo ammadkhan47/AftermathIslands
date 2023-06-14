@@ -170,6 +170,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 let accelbyteAccessData = await getAccelbyteAccessToken(oidcIDToken);
                 let accelbyteAccessToken = accelbyteAccessData['access_token'];
                 let openIDUserId = accelbyteAccessData['platform_user_id'];
+                console.log('accelbyteAccessToken');
+                console.log(accelbyteAccessToken);
                 sessionStorage.setItem('accelbyte_access_token', accelbyteAccessToken);
 
                 let accelbyteUserData = await getAccelbyteUser(accelbyteAccessToken);
