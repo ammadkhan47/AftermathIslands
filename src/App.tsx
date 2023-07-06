@@ -281,8 +281,8 @@ const EmbeddedView: React.FC<ViewProps> = (props: ViewProps) => {
             <FullScreen handle={handle}>
                 <IdleTimeout
                     Status={props.StreamerStatus}
-                    WarningThreshold={150}
-                    ExitThreshold={60}
+                    WarningThreshold={1500}
+                    ExitThreshold={600}
                     WarningCallback={handle.exit}
                     ExitCallback={() => window.location.reload()} // TODO: How to 'close' a contribution?
                 />
