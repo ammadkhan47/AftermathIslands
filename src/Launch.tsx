@@ -43,7 +43,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     const [codeVerifier, setCodeVerifier] = useState(sessionStorage.getItem('code_verifier') || '');
 
     useEffect(() => {
-        unhideLogin();
         setupLoginWithOpenIDConnect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -121,15 +120,6 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
     );
 
-    function unhideLogin() {
-        const loginMiddle = document.getElementById("login-middle") as HTMLElement;
-        const loginRight = document.getElementById("login-right") as HTMLElement;
-        if ((window.location.href.includes("code"))) {
-            loginMiddle.style.display = "none";
-            loginRight.style.display = "none";
-        }
-    }
-
     async function playButton() {
         nameInput = document.getElementById("playername") as HTMLInputElement;
 
@@ -161,6 +151,16 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
     }
 
     async function setupLoginWithOpenIDConnect() {
+        // ui logic
+        const loginWrapper = document.getElementById("login-buttons-wrap") as HTMLElement;
+        loginWrapper.style.display = "none";
+        const loginMiddle = document.getElementById("login-middle") as HTMLElement;
+        const loginRight = document.getElementById("login-right") as HTMLElement;
+        if ((window.location.href.includes("code"))) {
+            loginMiddle.style.display = "none";
+            loginRight.style.display = "none";
+        }
+
         // by default we set guest login
         sessionStorage.setItem('is_guest_login', 'true');
         props.GameCode('guest');
@@ -170,14 +170,15 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
 
         // if we have one, we proceed to log in with it
         if (authorizationCode) {
+            console.log('authorization code, proceed with open id');
             let oidcResult = await getOpenIDToken(authorizationCode);
             let oidcIDToken = oidcResult['id_token'];
             let oidcAccessToken = oidcResult['access_token'];
             removeUrlParameter('code');
             removeUrlParameter('iss');
             sessionStorage.setItem('is_guest_login', 'false');
-            const loginheading = document.getElementById("login-heading") as HTMLHeadingElement;
-            loginheading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
+            const loginHeading = document.getElementById("login-heading") as HTMLHeadingElement;
+            loginHeading.textContent = "All data from all accounts created with a Meta Park Pass including username and inventories will be deleted when the Beta ends.";
 
             if (oidcResult) {
                 let accelbyteAccessData = await getAccelbyteAccessToken(oidcIDToken);
@@ -192,6 +193,8 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                 if (accelbyteUserData) {
                     let isExistingUser = !!accelbyteUserData['userName'];
                     if (!isExistingUser) {
+                        console.log('new accelbyte user logins');
+                        loginWrapper.style.display = "block";
                         // new user -> save uuid and birthdate
                         let oidcUserData = await getOpenIDUserData(oidcAccessToken);
                         let patchData = {
@@ -200,16 +203,24 @@ export const LaunchView: React.FC<LaunchProps> = (props: LaunchProps) => {
                         };
                         await patchAccelbyteUser(accelbyteAccessToken, patchData);
                     } else {
-                        console.log('existing user logins');
+                        console.log('existing accelbyte user logins');
                         props.Launch();
                         let foobarElement = document.getElementById('mybody') as HTMLBodyElement;
                         foobarElement.style.background = '#0f101f';
                     }
                 } else {
-                    // todo throw some error
+                    console.log('error: missing accelbyteUserData');
+                    loginWrapper.style.display = "block";
+                    loginHeading.textContent = "Failed getting authentication data. Please try again later.";
                 }
+            } else {
+                console.log('error: missing oidcResult');
+                loginWrapper.style.display = "block";
+                loginHeading.textContent = "Failed getting authentication data. Please try again later.";
             }
         } else {
+            console.log('no authorization code, proceed as normal');
+            loginWrapper.style.display = "block";
             // setup pkce for future use
             let challenge = pkceChallenge();
             sessionStorage.setItem('code_challenge', challenge.code_challenge);
