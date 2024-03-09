@@ -1,9 +1,7 @@
-# PureWeb Pixel Streaming Client Template
+# Pixel Streaming Client App
 
-Readme coming soon.
 
-## Support
 
-Contact support@pureweb.com with any questions or concerns.
-
-##
+Front-end interface for AftermathIslands' **Pixel-Streamed** Unreal Engine project. 
+Features **ReadyPlayerMe** integration for custom character creation and in-game usage. 
+Includes a login system with **OpenID Connect** or guest play options.
